@@ -17,6 +17,6 @@ http://open-core.meteor.com (temporary URL, server donation accepted :P)
     cd open-core
     CORE_DB_URL=postgres://[username]:[password]/[address-of-core-db]/[databasename] meteor
 
-## I can't even...
+# I can't even...
 
 If you have questions about any of this, join us in the stellar developer chat over at [Slack](https://stellar-public.slack.com/messages/dev/)
