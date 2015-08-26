@@ -10,9 +10,8 @@ angular.module 'opencore', ['angular-meteor', 'ngRoute', 'ngCookies', 'stellarPo
     controller: 'StatsController'
 
 .controller 'StatsController', ($scope, $meteor, $routeParams, stellarData) ->
-  Tracker.autorun (comp) ->
+  $scope.$meteorAutorun ->
     $scope.ledgerheaders = stellarData.ledgerheaders.reactive()
     $scope.transactions = stellarData.transactions.reactive()
     $scope.peers = stellarData.peers.reactive()
-    $scope.$apply() unless comp.firstRun
-  
+    
