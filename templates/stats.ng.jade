@@ -2,8 +2,9 @@ div(ng-include="'templates/header.html'")
 
 h1 Network Stats
 h2 Last 10 Transactions
-div(ng-repeat="transaction in transactions")
-  p Ledger Seq: {{transaction.ledgerseq}}, XDR: {{transaction.txbody}}
+div.transaction(ng-repeat="transaction in transactions")
+  div.operation(ng-repeat="operation in transaction.operations")
+    p {{operation.type}}, asset: {{operation.asset}}, dest: {{operation.destination}}
 
 h2 Last 10 Ledger Headers
 div(ng-repeat="ledgerheader in ledgerheaders")

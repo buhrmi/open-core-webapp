@@ -1,4 +1,4 @@
-CORE_DB_URL = process.env['CORE_DB_URL']
+CORE_DB_URL = process.env['CORE_DB_URL'] || 'postgres://stellar-core:stellar@open-core.org/stellar-core'
 
 throw 'Please specify Postgres connection string in CORE_DB_URL environment variable' unless CORE_DB_URL
 
