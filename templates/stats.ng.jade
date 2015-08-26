@@ -1,0 +1,14 @@
+div(ng-include="'templates/header.html'")
+
+h1 Network Stats
+h2 Last 10 Transactions
+div(ng-repeat="transaction in transactions")
+  p Ledger Seq: {{transaction.ledgerseq}}, XDR: {{transaction.txbody}}
+
+h2 Last 10 Ledger Headers
+div(ng-repeat="ledgerheader in ledgerheaders")
+  p Closetime: {{ledgerheader.closetime}}
+
+h2 Active Peers
+div(ng-repeat="peer in peers")
+  p Address: {{peer.ip}}:{{peer.port}}
