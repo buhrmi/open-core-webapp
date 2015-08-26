@@ -1,5 +1,5 @@
 # open-core
-The Core. For everyone.
+Welcome to the Core. Take the red pill, and venture forth.
 
 # See it running
 http://open-core.meteor.com (temporary URL, server donation accepted :P)
