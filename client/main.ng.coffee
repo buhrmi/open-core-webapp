@@ -1,8 +1,4 @@
-ledgerheaders = new PgSubscription 'lastLedgerHeaders'
-transactions = new PgSubscription 'lastTransactions'
-peers = new PgSubscription 'peers'
-
-angular.module 'opencore', ['angular-meteor', 'ngRoute', 'ngCookies']
+angular.module 'opencore', ['angular-meteor', 'ngRoute', 'ngCookies', 'stellarPostgres']
 
 .run ($meteor, $rootScope) ->
   $rootScope.appName = 'OpenCore'
@@ -13,11 +9,11 @@ angular.module 'opencore', ['angular-meteor', 'ngRoute', 'ngCookies']
     templateUrl: 'templates/stats.html'
     controller: 'MainController'
 
-.controller 'MainController', ($scope, $meteor, $routeParams) ->
+.controller 'MainController', ($scope, $meteor, $routeParams, stellarData) ->
   Tracker.autorun (comp) ->
-    $scope.ledgerheaders = ledgerheaders.reactive()
-    $scope.transactions = transactions.reactive()
-    $scope.peers = peers.reactive()
+    $scope.ledgerheaders = stellarData.ledgerheaders.reactive()
+    $scope.transactions = stellarData.transactions.reactive()
+    $scope.peers = stellarData.peers.reactive()
     $scope.$apply() unless comp.firstRun
 
   
