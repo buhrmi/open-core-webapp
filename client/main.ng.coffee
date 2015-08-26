@@ -7,14 +7,12 @@ angular.module 'opencore', ['angular-meteor', 'ngRoute', 'ngCookies', 'stellarPo
   $locationProvider.html5Mode(true)
   $routeProvider.when '/',
     templateUrl: 'templates/stats.html'
-    controller: 'MainController'
+    controller: 'StatsController'
 
-.controller 'MainController', ($scope, $meteor, $routeParams, stellarData) ->
+.controller 'StatsController', ($scope, $meteor, $routeParams, stellarData) ->
   Tracker.autorun (comp) ->
     $scope.ledgerheaders = stellarData.ledgerheaders.reactive()
     $scope.transactions = stellarData.transactions.reactive()
     $scope.peers = stellarData.peers.reactive()
     $scope.$apply() unless comp.firstRun
-
-  
   
