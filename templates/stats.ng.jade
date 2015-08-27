@@ -7,7 +7,7 @@ div.offer(ng-repeat="offer in offers")
    a(oc-address="{{offer.sellerid}}")
    | offers
    a(oc-address="{{offer.sellingissuer}}")
-   | 's {{offer.sellingassetcode}} for {{offer.price / 1000000 | number : 2}}
+   | 's {{offer.sellingassetcode}} for {{offer.price | number : 0}}
    a(oc-address="{{offer.buyingissuer}}")
    | 's {{offer.buyingassetcode}} ({{offer.amount}} available)
 
