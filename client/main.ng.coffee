@@ -6,8 +6,8 @@ angular.module 'opencore', ['angular-meteor', 'ngRoute', 'ngCookies', 'stellarPo
 .config ($locationProvider, $routeProvider) ->
   $locationProvider.html5Mode(true)
   $routeProvider.when '/',
-    templateUrl: 'templates/stats.html'
-    controller: 'StatsController'
+    templateUrl: 'templates/overview.html'
+    controller: 'OverviewController'
 
 .directive 'ocAddress', ->
   restrict: 'A'
@@ -16,7 +16,7 @@ angular.module 'opencore', ['angular-meteor', 'ngRoute', 'ngCookies', 'stellarPo
     el.html 'unkown'
 
 
-.controller 'StatsController', ($scope, $meteor, $routeParams, stellarData) ->
+.controller 'OverviewController', ($scope, $meteor, $routeParams, stellarData) ->
   
   $scope.$meteorAutorun ->
     pgTransactions = stellarData.transactions.reactive()

@@ -6,15 +6,19 @@
 
 body {
   font-family: 'Source Sans Pro', sans-serif;
+  position: relative;
 }
 
 $brandColor: #438EB9;
+$sidebarColor: #f2f2f2;
+$sidebarWidth: 200px;
 
-#top_bar {
+#topbar {
   background-color: $brandColor;
   color: white;
   height: 36px;
   #logo {
+    padding: 6px 12px;
     float: left;
   }
   #login-buttons {
@@ -36,4 +40,27 @@ $brandColor: #438EB9;
       background-color: rgba($brandColor, 0.3);
     }
   }
+}
+
+#sidebar {
+  padding: 6px 12px;
+  background-color: $sidebarColor;
+  border-right: 1px solid darken($sidebarColor, 22);
+  width: $sidebarWidth;
+  position: absolute;
+  height: 100%;
+}
+
+#navbar {
+  padding: 6px 12px;
+  background-color: $sidebarColor;
+  border-bottom: 1px solid darken($sidebarColor, 8);
+}
+
+#main {
+  margin-left: $sidebarWidth;  
+}
+
+#content {
+  padding: 6px 12px;
 }
