@@ -9,6 +9,13 @@ angular.module 'opencore', ['angular-meteor', 'ngRoute', 'ngCookies', 'stellarPo
     templateUrl: 'templates/stats.html'
     controller: 'StatsController'
 
+.directive 'ocAddress', ->
+  restrict: 'A'
+  link: (scope, el, attrs) ->
+    el.attr 'href', "/account/#{attrs.ocAddress}"
+    el.html 'unkown'
+
+
 .controller 'StatsController', ($scope, $meteor, $routeParams, stellarData) ->
   
   $scope.$meteorAutorun ->
@@ -16,7 +23,8 @@ angular.module 'opencore', ['angular-meteor', 'ngRoute', 'ngCookies', 'stellarPo
     $scope.transactions = for pgTransaction in pgTransactions
       new StellarBase.Transaction(pgTransaction.txbody)
       
-    
+  $scope.$meteorAutorun ->
+    $scope.offers = stellarData.offers.reactive()  
   
   $scope.$meteorAutorun ->
     $scope.ledgerheaders = stellarData.ledgerheaders.reactive()

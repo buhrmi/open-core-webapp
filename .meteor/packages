@@ -13,3 +13,5 @@ angular:angular-cookies
 angular:angular-route
 civilframe:angular-jade
 rgnevashev:meteor-angular-coffee
+accounts-ui
+accounts-password

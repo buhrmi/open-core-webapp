@@ -1,4 +1,4 @@
-CORE_DB_URL = process.env['CORE_DB_URL'] || 'postgres://stellar-core:stellar@open-core.org/stellar-core'
+CORE_DB_URL = process.env['CORE_DB_URL']
 
 throw 'Please specify Postgres connection string in CORE_DB_URL environment variable' unless CORE_DB_URL
 
@@ -12,3 +12,6 @@ Meteor.publish 'lastTransactions', ->
 
 Meteor.publish 'peers', ->
   liveDb.select('SELECT * FROM peers ORDER BY rank DESC')
+
+Meteor.publish 'offers', ->
+  liveDb.select('SELECT * FROM offers ORDER BY offerid DESC')
