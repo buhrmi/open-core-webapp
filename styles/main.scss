@@ -1,0 +1,39 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Source Sans Pro', sans-serif;
+}
+
+$brandColor: #438EB9;
+
+#top_bar {
+  background-color: $brandColor;
+  color: white;
+  height: 36px;
+  #logo {
+    float: left;
+  }
+  #login-buttons {
+    float: right;
+    color: black;
+    position: relative;
+    #login-sign-in-link {
+      height: 36px;
+      padding: 6px 14px;
+      cursor: pointer;
+      color: white;
+      display: block;
+      background-color: lighten($brandColor, 10);
+    }
+    #login-dropdown-list {
+      position: absolute;
+      right: 0;
+      padding: 16px;
+      background-color: rgba($brandColor, 0.3);
+    }
+  }
+}
