@@ -9,6 +9,11 @@ a {
   text-decoration: none;
 }
 
+html {
+  position: relative;
+  height: 100%;
+}
+
 body {
   font-family: 'Source Sans Pro', sans-serif;
   position: relative;

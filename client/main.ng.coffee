@@ -17,7 +17,15 @@ angular.module 'opencore', ['angular-meteor', 'ngRoute', 'ngCookies', 'stellarPo
 
 .filter 'isValidAccount', ->
   (account) ->
-    if account?.verification then true else false
+    try StellarBase.verify(account.user_id, new Buffer(account.signature, 'hex'), new Buffer(account._id))
+
+.filter 'sign', ->
+  (object) ->
+    return unless object?.secretSeed && object?.data
+    keypair = StellarBase.Keypair.fromSeed(object.secretSeed)
+    keypair.sign(object.data).toString('hex')
+    # StellarBase.sign(object.data, keypair.rawSeed())
+
 
 .directive 'ocAddress', ->
   restrict: 'A'
