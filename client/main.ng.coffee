@@ -11,6 +11,13 @@ angular.module 'opencore', ['angular-meteor', 'ngRoute', 'ngCookies', 'stellarPo
   $routeProvider.when '/accounts',
     templateUrl: 'templates/layout.html'
     controller: 'AccountsController'
+  $routeProvider.when '/mycore',
+    templateUrl: 'templates/layout.html'
+    controller: 'MyCoreController'
+
+.filter 'isValidAccount', ->
+  (account) ->
+    if account?.verification then true else false
 
 .directive 'ocAddress', ->
   restrict: 'A'
@@ -18,6 +25,12 @@ angular.module 'opencore', ['angular-meteor', 'ngRoute', 'ngCookies', 'stellarPo
     el.attr 'href', "/account/#{attrs.ocAddress}"
     el.html 'unkown'
 
+.controller 'MyCoreController', ($scope) ->
+  $scope.saveAccount = (account) ->
+    console.log('saving account')
+
+  $scope.resourceTitle = 'My Core'
+  $scope.resourceTemplate = 'templates/mycore.html'
 
 .controller 'AccountsController', ($scope) ->
   $scope.resourceTitle = 'Accounts'

@@ -1,0 +1,14 @@
+h3 My Accounts
+p This is a list of accounts that are either federated by this server or you have proven ownership.
+
+h4 Add Account
+
+input(ng-model="newAccount._id" placeholder="Public Key")
+
+h5 Verify ownership via signature
+p To verify this key, please sign the following text and copy the result into the 'signature' field.
+p
+  input(ng-model="newAccount.verification" placeholder="Signature")
+  button(ng-enabled="newAccount | isValidAccount" ng-click="saveAccount(newAccount)") Add Account
+  span(ng-hide="newAccount | isValidAccount") Signature is NOT valid!
+p OR verify ownership via Private Key (unsafe)

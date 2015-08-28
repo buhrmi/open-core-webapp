@@ -6,6 +6,7 @@
 
 a {
   cursor: pointer;
+  text-decoration: none;
 }
 
 body {
@@ -16,18 +17,22 @@ body {
 $brandColor: #438EB9;
 $sidebarColor: #f2f2f2;
 $sidebarWidth: 200px;
+$topbarHeight: 36px;
 
 #topbar {
   background-color: $brandColor;
   color: white;
-  height: 36px;
+  height: $topbarHeight;
+  .nav {
+    color: white;
+  }
   #logo {
     padding: 6px 12px;
     float: left;
   }
   .nav {
     float: right;
-    height: 36px;
+    height: $topbarHeight;
     display: block;
     padding: 6px 14px;
     border-left: 1px solid white;
@@ -40,7 +45,7 @@ $sidebarWidth: 200px;
     float: right;
     position: relative;
     .login-link-text {
-      height: 36px;
+      height: $topbarHeight;
       padding: 6px 14px;
       display: block;
       background-color: lighten($brandColor, 10);
