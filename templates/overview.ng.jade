@@ -1,34 +1,30 @@
-div(ng-include="'templates/topbar.html'")
-div(ng-include="'templates/sidebar.html'")
+h3 Welcome to Open Core!
 
-#main
-  div(ng-include="'templates/navbar.html'")
+p Currently connected to Stellar-Core Testnet
+p You can <a href="http://github.com/buhrmi/open-core"> fork me on GitHub</a> or <a href="http://gilt.jp">shop at GILT</a>!
 
-  #content
-    h3 Welcome to Open Core!
-    p Currently connected to Stellar-Core Testnet
-    p You can <a href="http://github.com/buhrmi/open-core"> fork me on GitHub</a> or <a href="http://gilt.jp">shop at GILT</a>!
+h3 Network Stats
 
-    h3 Network Stats
-    h4 Recent Offers
-    div.offer(ng-repeat="offer in offers")
-     p 
-       a(oc-address="{{offer.sellerid}}")
-       | offers
-       a(oc-address="{{offer.sellingissuer}}")
-       | 's {{offer.sellingassetcode}} for {{offer.price | number : 0}}
-       a(oc-address="{{offer.buyingissuer}}")
-       | 's {{offer.buyingassetcode}} ({{offer.amount}} available)
+h4 Recent Offers
 
-    h4 Last 10 Transactions
-    div.transaction(ng-repeat="transaction in transactions")
-      div.operation(ng-repeat="operation in transaction.operations")
-        p {{operation.type}}, asset: {{operation.asset}}, dest: {{operation.destination}}
+div.offer(ng-repeat="offer in offers")
+ p 
+   a(oc-address="{{offer.sellerid}}")
+   | offers
+   a(oc-address="{{offer.sellingissuer}}")
+   | 's {{offer.sellingassetcode}} for {{offer.price | number : 0}}
+   a(oc-address="{{offer.buyingissuer}}")
+   | 's {{offer.buyingassetcode}} ({{offer.amount}} available)
 
-    h4 Last 10 Ledger Headers
-    div(ng-repeat="ledgerheader in ledgerheaders")
-      p Closetime: {{ledgerheader.closetime}}
+h4 Last 10 Transactions
+div.transaction(ng-repeat="transaction in transactions")
+  div.operation(ng-repeat="operation in transaction.operations")
+    p {{operation.type}}, asset: {{operation.asset}}, dest: {{operation.destination}}
 
-    h4 Active Peers
-    div(ng-repeat="peer in peers")
-      p Address: {{peer.ip}}:{{peer.port}}
+h4 Last 10 Ledger Headers
+div(ng-repeat="ledgerheader in ledgerheaders")
+  p Closetime: {{ledgerheader.closetime}}
+
+h4 Active Peers
+div(ng-repeat="peer in peers")
+  p Address: {{peer.ip}}:{{peer.port}}

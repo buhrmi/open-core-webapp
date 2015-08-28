@@ -4,6 +4,10 @@
   box-sizing: border-box;
 }
 
+a {
+  cursor: pointer;
+}
+
 body {
   font-family: 'Source Sans Pro', sans-serif;
   position: relative;
@@ -21,19 +25,28 @@ $sidebarWidth: 200px;
     padding: 6px 12px;
     float: left;
   }
+  .nav {
+    float: right;
+    height: 36px;
+    display: block;
+    padding: 6px 14px;
+    border-left: 1px solid white;
+    border-right: 1px solid white;
+    &.mycore {
+      background-color: #2e8965;
+    }
+  }
   #login-buttons {
     float: right;
-    color: black;
     position: relative;
-    #login-sign-in-link {
+    .login-link-text {
       height: 36px;
       padding: 6px 14px;
-      cursor: pointer;
-      color: white;
       display: block;
       background-color: lighten($brandColor, 10);
     }
     #login-dropdown-list {
+      color: black;
       position: absolute;
       right: 0;
       padding: 16px;

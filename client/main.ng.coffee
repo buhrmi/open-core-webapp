@@ -6,8 +6,11 @@ angular.module 'opencore', ['angular-meteor', 'ngRoute', 'ngCookies', 'stellarPo
 .config ($locationProvider, $routeProvider) ->
   $locationProvider.html5Mode(true)
   $routeProvider.when '/',
-    templateUrl: 'templates/overview.html'
+    templateUrl: 'templates/layout.html'
     controller: 'OverviewController'
+  $routeProvider.when '/accounts',
+    templateUrl: 'templates/layout.html'
+    controller: 'AccountsController'
 
 .directive 'ocAddress', ->
   restrict: 'A'
@@ -16,8 +19,18 @@ angular.module 'opencore', ['angular-meteor', 'ngRoute', 'ngCookies', 'stellarPo
     el.html 'unkown'
 
 
-.controller 'OverviewController', ($scope, $meteor, $routeParams, stellarData) ->
-  
+.controller 'AccountsController', ($scope) ->
+  $scope.resourceTitle = 'Accounts'
+  $scope.resourceTemplate = 'templates/accounts.html'
+
+  $scope.federatedAccounts = $scope.$meteorCollection ->
+    Accounts.find({}, {sort: {created_at: -1}})
+
+
+.controller 'OverviewController', ($scope, $routeParams, stellarData) ->
+  $scope.resourceTitle = 'Overview'
+  $scope.resourceTemplate = 'templates/overview.html'
+
   $scope.$meteorAutorun ->
     pgTransactions = stellarData.transactions.reactive()
     $scope.transactions = for pgTransaction in pgTransactions
