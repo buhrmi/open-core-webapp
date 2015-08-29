@@ -11,10 +11,14 @@ div.offer(ng-repeat="offer in offers")
  p 
    a(oc-address="{{offer.sellerid}}")
    | offers
-   a(oc-address="{{offer.sellingissuer}}")
-   | 's {{offer.sellingassetcode}} for {{offer.price | number : 0}}
-   a(oc-address="{{offer.buyingissuer}}")
-   | 's {{offer.buyingassetcode}} ({{offer.amount}} available)
+   span(ng-show="offer.sellingissuer")
+     a(oc-address="{{offer.sellingissuer}}")
+     | 's {{offer.sellingassetcode}} for {{offer.price | number : 0}}
+   span(ng-hide="offer.sellingissuer") NATIVE
+   span(ng-show="offer.buyingissuer")
+     a(oc-address="{{offer.buyingissuer}}")
+     | 's {{offer.buyingassetcode}} ({{offer.amount}} available)
+   span(ng-hide="offer.buyingissuer") NATIVE
 
 h4 Last 10 Transactions
 div.transaction(ng-repeat="transaction in transactions")

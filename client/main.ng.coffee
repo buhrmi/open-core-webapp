@@ -41,7 +41,7 @@ angular.module 'opencore', ['angular-meteor', 'ngRoute', 'ngCookies', 'stellarPo
   link: (scope, el, attrs) ->
     account = Accounts.find attrs.ocAddress
     el.attr 'href', "/account/#{attrs.ocAddress}"
-    el.html account?.name || 'uknown'
+    el.html account?.name || ' unknown'
 
 .controller 'MyCoreController', ($scope) ->
   $scope.resourceTitle = 'My Core'
