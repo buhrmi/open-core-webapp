@@ -1,13 +1,26 @@
 h3 My Accounts
 p This is a list of accounts that are either federated by this server or you have proven ownership.
 
-ul.accounts
-  li.account(ng-repeat="account in userAccounts") {{account._id}}
+.accounts.own
+  .account(ng-repeat="account in userAccounts")
+    .address Address: {{account._id}}
+    .name
+      | Name:
+      input(ng-model="account.name")
+    .seed
+      | Secret Seed:
+      input(ng-model="account.seed")
+      | (optional: you can store your secret seed on this server if you want your account to be federated. Only use this if your connection is secure.)
+      span(ng-hide="account.seedIsValid()") Invalid seed.
+    .assets
+      | Asset Information
+      .asset
 
 
 h4 Add Account
 
 input(ng-model="newAccount._id" placeholder="Address")
+input(ng-model="newAccount.name" placeholder="Account Name")
 
 h5 Verify ownership via signature
 p To verify this address, please sign the following text and copy the result into the 'signature' field.
@@ -18,7 +31,8 @@ p(ng-init="newAccount.user_id=currentUser._id")
   button(ng-show="newAccount | isValidAccount" ng-click="saveAccount(newAccount)") Add Account
   span(ng-hide="newAccount | isValidAccount") Signature is NOT valid!
 
-h5 Make signature
+h3 Make signature
+p You can use area to create a signature.
 input(ng-model="object.data" placeholder="Text" ng-init="object.data=currentUser._id")
 input(ng-model="object.secretSeed" placeholder="Secret Seed")
 p Signature: {{object | sign}}

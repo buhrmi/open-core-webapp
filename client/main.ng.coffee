@@ -35,8 +35,9 @@ angular.module 'opencore', ['angular-meteor', 'ngRoute', 'ngCookies', 'stellarPo
 .directive 'ocAddress', ->
   restrict: 'A'
   link: (scope, el, attrs) ->
+    account = Accounts.find attrs.ocAddress
     el.attr 'href', "/account/#{attrs.ocAddress}"
-    el.html 'unkown'
+    el.html account?.name || 'uknown'
 
 .controller 'MyCoreController', ($scope) ->
   $scope.saveAccount = (account) ->

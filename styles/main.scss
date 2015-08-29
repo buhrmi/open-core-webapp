@@ -1,28 +1,8 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-a {
-  cursor: pointer;
-  text-decoration: none;
-}
-
-html {
-  position: relative;
-  height: 100%;
-}
-
-body {
-  font-family: 'Source Sans Pro', sans-serif;
-  position: relative;
-}
-
 $brandColor: #438EB9;
 $sidebarColor: #f2f2f2;
 $sidebarWidth: 200px;
 $topbarHeight: 36px;
+$myCoreColor: #2e8965;
 
 #topbar {
   background-color: $brandColor;
@@ -43,7 +23,7 @@ $topbarHeight: 36px;
     border-left: 1px solid white;
     border-right: 1px solid white;
     &.mycore {
-      background-color: #2e8965;
+      background-color: $myCoreColor;
     }
   }
   #login-buttons {
@@ -81,9 +61,26 @@ $topbarHeight: 36px;
 }
 
 #main {
-  margin-left: $sidebarWidth;  
+  margin-left: $sidebarWidth;
 }
 
 #content {
   padding: 6px 12px;
+  h3:not(:first-child) {
+    margin-top: 22px;
+  }
+  h4 {
+    margin-top: 18px;
+  }
+  h5 {
+    margin-top: 14px;
+  }
+}
+
+.accounts.own {
+  .account {
+    padding: 12px;
+    background: #efefef;
+    border: 1px solid #cecece;
+  }
 }

@@ -7,10 +7,14 @@ if Meteor.isServer
 
 Accounts.allow
   insert: (userId, account) ->
-    Accounts._transform(account).isValid()
+    return false unless userId && account.user_id == userId # TODO: or userId is admin
+    return false unless Accounts._transform(account).isValid()
+    true
 
   update: (userId, account) ->
-    Accounts._transform(account).isValid()
+    return false unless userId && account.user_id == userId # TODO: or userId is admin
+    return false unless Accounts._transform(account).isValid()
+    true
 
 Accounts.helpers
   isValid: ->
@@ -18,4 +22,11 @@ Accounts.helpers
       keypair = StellarBase.Keypair.fromAddress(@_id)
       StellarBase.verify(@user_id, new Buffer(@verification, 'hex'), keypair.rawPublicKey())
     catch e
+      false
+
+  seedIsValid: ->
+    try
+      StellarBase.Keypair.fromSeed(@seed).address() == @_id
+    catch e
+      console.log(e)
       false
