@@ -16,3 +16,8 @@ rgnevashev:meteor-angular-coffee
 accounts-password
 fourseven:scss
 accounts-ui-unstyled
+dburles:collection-helpers
+meteorhacks:npm
+
+
+npm-container

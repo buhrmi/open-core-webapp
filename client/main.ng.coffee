@@ -1,3 +1,5 @@
+Meteor.subscribe 'allAccounts'
+
 angular.module 'opencore', ['angular-meteor', 'ngRoute', 'ngCookies', 'stellarPostgres']
 
 .run ($meteor, $rootScope) ->
@@ -17,13 +19,16 @@ angular.module 'opencore', ['angular-meteor', 'ngRoute', 'ngCookies', 'stellarPo
 
 .filter 'isValidAccount', ->
   (account) ->
-    try StellarBase.verify(account.user_id, new Buffer(account.signature, 'hex'), new Buffer(account._id))
+    account = Accounts._transform(account)
+    account.isValid()
 
 .filter 'sign', ->
   (object) ->
     return unless object?.secretSeed && object?.data
     keypair = StellarBase.Keypair.fromSeed(object.secretSeed)
-    keypair.sign(object.data).toString('hex')
+    secretKey = keypair.rawSecretKey()
+    data = object.data
+    StellarBase.sign(data, secretKey).toString('hex')
     # StellarBase.sign(object.data, keypair.rawSeed())
 
 
@@ -35,7 +40,9 @@ angular.module 'opencore', ['angular-meteor', 'ngRoute', 'ngCookies', 'stellarPo
 
 .controller 'MyCoreController', ($scope) ->
   $scope.saveAccount = (account) ->
-    console.log('saving account')
+    Accounts.insert(account)
+
+  $scope.userAccounts = $scope.$meteorCollection -> Meteor.user().getAccounts()
 
   $scope.resourceTitle = 'My Core'
   $scope.resourceTemplate = 'templates/mycore.html'
@@ -44,7 +51,7 @@ angular.module 'opencore', ['angular-meteor', 'ngRoute', 'ngCookies', 'stellarPo
   $scope.resourceTitle = 'Accounts'
   $scope.resourceTemplate = 'templates/accounts.html'
 
-  $scope.federatedAccounts = $scope.$meteorCollection ->
+  $scope.accounts = $scope.$meteorCollection ->
     Accounts.find({}, {sort: {created_at: -1}})
 
 
@@ -56,13 +63,12 @@ angular.module 'opencore', ['angular-meteor', 'ngRoute', 'ngCookies', 'stellarPo
     pgTransactions = stellarData.transactions.reactive()
     $scope.transactions = for pgTransaction in pgTransactions
       new StellarBase.Transaction(pgTransaction.txbody)
-      
+
   $scope.$meteorAutorun ->
-    $scope.offers = stellarData.offers.reactive()  
-  
+    $scope.offers = stellarData.offers.reactive()
+
   $scope.$meteorAutorun ->
     $scope.ledgerheaders = stellarData.ledgerheaders.reactive()
 
   $scope.$meteorAutorun ->
     $scope.peers = stellarData.peers.reactive()
-    

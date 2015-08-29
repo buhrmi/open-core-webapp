@@ -1,0 +1,54 @@
+{
+  "dependencies": {
+    "stellar-base": {
+      "version": "0.3.10",
+      "dependencies": {
+        "babel-runtime": {
+          "version": "4.7.16",
+          "dependencies": {
+            "core-js": {
+              "version": "0.6.1"
+            }
+          }
+        },
+        "crc": {
+          "version": "3.3.0"
+        },
+        "ed25519": {
+          "version": "0.0.2"
+        },
+        "js-xdr": {
+          "version": "0.0.10",
+          "dependencies": {
+            "cursor": {
+              "version": "0.1.5"
+            },
+            "long": {
+              "version": "2.2.5"
+            },
+            "sequencify": {
+              "version": "0.0.7"
+            }
+          }
+        },
+        "lodash": {
+          "version": "3.10.1"
+        },
+        "sha.js": {
+          "version": "2.4.2",
+          "dependencies": {
+            "inherits": {
+              "version": "2.0.1"
+            }
+          }
+        },
+        "thirty-two": {
+          "version": "0.0.2"
+        },
+        "tweetnacl": {
+          "version": "0.13.1"
+        }
+      }
+    }
+  }
+}

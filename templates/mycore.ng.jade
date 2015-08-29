@@ -1,20 +1,24 @@
 h3 My Accounts
 p This is a list of accounts that are either federated by this server or you have proven ownership.
 
+ul.accounts
+  li.account(ng-repeat="account in userAccounts") {{account._id}}
+
+
 h4 Add Account
 
-input(ng-model="newAccount._id" placeholder="Public Key")
+input(ng-model="newAccount._id" placeholder="Address")
 
 h5 Verify ownership via signature
-p To verify this key, please sign the following text and copy the result into the 'signature' field.
+p To verify this address, please sign the following text and copy the result into the 'signature' field.
 pre {{currentUser._id}}
 p(ng-init="newAccount.user_id=currentUser._id")
-  input(ng-model="newAccount.signature" placeholder="Signature")
+  input(ng-model="newAccount.verification" placeholder="Signature")
   button(ng-hide="newAccount | isValidAccount" disabled) Add Account
   button(ng-show="newAccount | isValidAccount" ng-click="saveAccount(newAccount)") Add Account
   span(ng-hide="newAccount | isValidAccount") Signature is NOT valid!
 
 h5 Make signature
-input(ng-model="object.data" placeholder="Text")
+input(ng-model="object.data" placeholder="Text" ng-init="object.data=currentUser._id")
 input(ng-model="object.secretSeed" placeholder="Secret Seed")
 p Signature: {{object | sign}}

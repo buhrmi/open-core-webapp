@@ -1,5 +1,4 @@
-h3 Federated Accounts
+h3 Accounts
 
-.account(ng-repeat="account in federatedAccounts")
-
-h3 Other known Accounts
+ul.accounts
+  li.account(ng-repeat="account in accounts") {{account._id}}
