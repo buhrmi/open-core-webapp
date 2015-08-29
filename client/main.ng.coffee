@@ -16,20 +16,24 @@ angular.module 'opencore', ['angular-meteor', 'ngRoute', 'ngCookies', 'stellarPo
   $routeProvider.when '/mycore',
     templateUrl: 'templates/layout.html'
     controller: 'MyCoreController'
+    resolove:
+      currentUser: ($meteor) ->
+        $meteor.waitForUser()
 
 .filter 'isValidAccount', ->
   (account) ->
     account = Accounts._transform(account)
     account.isValid()
 
-.filter 'sign', ->
-  (object) ->
-    return unless object?.secretSeed && object?.data
-    keypair = StellarBase.Keypair.fromSeed(object.secretSeed)
-    secretKey = keypair.rawSecretKey()
-    data = object.data
-    StellarBase.sign(data, secretKey).toString('hex')
-    # StellarBase.sign(object.data, keypair.rawSeed())
+# .filter 'sign', ->
+#   (object) ->
+#     return unless object?.seed && object?.data
+#     try
+#       keypair = StellarBase.Keypair.fromSeed(object.seed)
+#       secretKey = keypair.rawSecretKey()
+#       data = object.data || object.user_id
+#       StellarBase.sign(data, secretKey).toString('hex')
+#     # StellarBase.sign(object.data, keypair.rawSeed())
 
 
 .directive 'ocAddress', ->
@@ -40,13 +44,15 @@ angular.module 'opencore', ['angular-meteor', 'ngRoute', 'ngCookies', 'stellarPo
     el.html account?.name || 'uknown'
 
 .controller 'MyCoreController', ($scope) ->
+  $scope.resourceTitle = 'My Core'
+  $scope.resourceTemplate = 'templates/mycore.html'
+
+  $scope.newAccount = Accounts._transform(user_id: Meteor.userId())
+
   $scope.saveAccount = (account) ->
     Accounts.insert(account)
 
   $scope.userAccounts = $scope.$meteorCollection -> Meteor.user().getAccounts()
-
-  $scope.resourceTitle = 'My Core'
-  $scope.resourceTemplate = 'templates/mycore.html'
 
 .controller 'AccountsController', ($scope) ->
   $scope.resourceTitle = 'Accounts'

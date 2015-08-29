@@ -21,12 +21,13 @@ Accounts.helpers
     try
       keypair = StellarBase.Keypair.fromAddress(@_id)
       StellarBase.verify(@user_id, new Buffer(@verification, 'hex'), keypair.rawPublicKey())
-    catch e
-      false
 
   seedIsValid: ->
     try
       StellarBase.Keypair.fromSeed(@seed).address() == @_id
-    catch e
-      console.log(e)
-      false
+
+  sign: ->
+    try
+      keypair = StellarBase.Keypair.fromSeed(@seed)
+      secretKey = keypair.rawSecretKey()
+      @verification = StellarBase.sign(@user_id, secretKey).toString('hex')

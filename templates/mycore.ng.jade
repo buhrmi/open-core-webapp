@@ -22,17 +22,19 @@ h4 Add Account
 input(ng-model="newAccount._id" placeholder="Address")
 input(ng-model="newAccount.name" placeholder="Account Name")
 
-h5 Verify ownership via signature
-p To verify this address, please sign the following text and copy the result into the 'signature' field.
+h5 Verify Address Ownership
+p EITHER provide the secret seed (only do this if you trust this website)
+input(ng-model="newAccount.seed" placeholder="Secret Seed" ng-change="newAccount.sign()")
+span(ng-hide="newAccount.seedIsValid()") Seed is NOT valid!
+p OR sign the following text and copy the result into the 'signature' field.
 pre {{currentUser._id}}
-p(ng-init="newAccount.user_id=currentUser._id")
-  input(ng-model="newAccount.verification" placeholder="Signature")
-  button(ng-hide="newAccount | isValidAccount" disabled) Add Account
-  button(ng-show="newAccount | isValidAccount" ng-click="saveAccount(newAccount)") Add Account
-  span(ng-hide="newAccount | isValidAccount") Signature is NOT valid!
+input(ng-model="newAccount.verification" placeholder="Signature")
+button(ng-hide="newAccount | isValidAccount" disabled) Add Account
+button(ng-show="newAccount | isValidAccount" ng-click="saveAccount(newAccount)") Add Account
+span(ng-hide="newAccount | isValidAccount") Signature is NOT valid!
 
-h3 Make signature
-p You can use area to create a signature.
-input(ng-model="object.data" placeholder="Text" ng-init="object.data=currentUser._id")
-input(ng-model="object.secretSeed" placeholder="Secret Seed")
-p Signature: {{object | sign}}
+//- h3 Make signature
+//- p You can use area to create a signature.
+//- input(ng-model="object.data" placeholder="Text" ng-init="object.data=currentUser._id")
+//- input(ng-model="object.seed" placeholder="Secret Seed")
+//- p Signature: {{object | sign}}
