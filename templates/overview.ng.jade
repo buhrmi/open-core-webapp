@@ -8,7 +8,7 @@ h3 Network Stats
 h4 Recent Offers
 
 div.offer(ng-repeat="offer in offers")
- p 
+ p
    a(oc-address="{{offer.sellerid}}")
    | offers
    span(ng-show="offer.sellingissuer")
@@ -21,13 +21,64 @@ div.offer(ng-repeat="offer in offers")
    span(ng-hide="offer.buyingissuer") NATIVE
 
 h4 Last 10 Transactions
-div.transaction(ng-repeat="transaction in transactions")
-  div.operation(ng-repeat="operation in transaction.operations")
-    p {{operation.type}}, asset: {{operation.asset}}, dest: {{operation.destination}}
+
+table(st-table="lastTransactions" class="table table-striped")
+  thead
+    tr
+      th Ledger
+      th Hash
+      th Success
+      th Info
+  tbody
+    tr(ng-repeat="transaction in transactions")
+      td {{transaction.pg.ledgerseq}}
+      td {{transaction.pg.txid}}
+      td {{transaction.result.result().result().switch().name}}
+      td {{displayTransactionResult(transaction.result)}}
+
+
+h4 Last 10 Operations
+
+table(st-table="lastOperations" class="table table-striped")
+  thead
+    tr
+      th Type
+      th Info
+
+  tbody
+    tr(ng-repeat="operation in operations")
+      td {{operation.type}}
+      td {{displayOperation(operation)}}
 
 h4 Last 10 Ledger Headers
-div(ng-repeat="ledgerheader in ledgerheaders")
-  p Closetime: {{ledgerheader.closetime}}
+table(st-table="lastOperations" class="table table-striped")
+  thead
+    tr
+      th Ledger
+      th Close Time
+      th Hash
+  tbody
+    tr(ng-repeat="ledgerheader in ledgerheaders")
+      td {{ledgerheader.ledgerseq}}
+      td {{ledgerheader.closetime}}
+      td {{ledgerheader.ledgerhash}}
+
+h4 Last 10 Historical Ledger Headers
+table(st-table="lastOperations" class="table table-striped")
+  thead
+    tr
+      th Ledger
+      th Close Time
+      th Transactions
+      th Operations
+      th Hash
+  tbody
+    tr(ng-repeat="ledgerheader in historyLedgerheaders")
+      td {{ledgerheader.sequence}}
+      td {{ledgerheader.updated_at}}
+      td {{ledgerheader.transaction_count}}
+      td {{ledgerheader.operation_count}}
+      td {{ledgerheader.ledger_hash}}
 
 h4 Active Peers
 div(ng-repeat="peer in peers")

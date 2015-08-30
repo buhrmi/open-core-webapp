@@ -66,16 +66,66 @@ angular.module 'opencore', ['angular-meteor', 'ngRoute', 'ngCookies', 'stellarPo
   $scope.resourceTitle = 'Overview'
   $scope.resourceTemplate = 'templates/overview.html'
 
+  $scope.displayTransactionResult = (txResult) ->
+    results = txResult.result().result().results()
+    # TODO multiple ops per transaction
+    result = results[0]
+    #opName = result.value().switch()
+    opReturnValue = result.value().value().switch().name
+    return opReturnValue
+
+  $scope.formatAsset = (asset) ->
+    if asset.isNative()
+      return "XLM"
+    else
+      return asset.getCode() + "/" + asset.getIssuer()
+
+  $scope.displayOperation = (operation) ->
+    if operation.type == 'createAccount'
+      return "Destination: " + operation.destination + ", starting balance:" + operation.startingBalance
+    else if operation.type == 'manageOffer'
+      ops = "Creating offer, "
+      if operation.orderId != 0
+        if operation.amount == 0
+          ops = "Updating offer, "
+       else
+         ops = "Cancelling order, "
+
+      return ops + "amount: " + operation.amount +
+        ", price " + operation.price +
+        ", selling: " + $scope.formatAsset(operation.selling) +
+        ", buying: " + $scope.formatAsset(operation.buying)
+    else if operation.type == 'payment'
+      return "payment of " +  operation.amount + " " + $scope.formatAsset(operation.asset) + " to " + operation.destination
+    else if operation.type == 'changeTrust'
+      return " limit set to  " + operation.limit + " for " + $scope.formatAsset(operation.line)
+    else
+      return operation
+
   $scope.$meteorAutorun ->
     pgTransactions = stellarData.transactions.reactive()
+    $scope.pgTransactions = pgTransactions
     $scope.transactions = for pgTransaction in pgTransactions
-      new StellarBase.Transaction(pgTransaction.txbody)
+      {
+        pg: pgTransaction
+        body:new StellarBase.Transaction(pgTransaction.txbody)
+        result:StellarBase.Transaction.decodeTransactionResultPair(pgTransaction.txresult)
+      }
+
+    $scope.operations = []
+    for transaction in $scope.transactions
+      for operation in transaction.body.operations
+        $scope.operations.push(operation)
+
 
   $scope.$meteorAutorun ->
     $scope.offers = stellarData.offers.reactive()
 
   $scope.$meteorAutorun ->
     $scope.ledgerheaders = stellarData.ledgerheaders.reactive()
+
+  $scope.$meteorAutorun ->
+    $scope.historyLedgerheaders = stellarData.historyLedgerheaders.reactive()
 
   $scope.$meteorAutorun ->
     $scope.peers = stellarData.peers.reactive()
