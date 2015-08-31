@@ -38,7 +38,7 @@ Accounts.helpers
       @verification = StellarBase.sign(@user_id, secretKey).toString('hex')
 
   buildTransaction: (tx) ->
-    stAccount = new StellarBase.Account(@_id)
+    stAccount = new StellarBase.Account(@_id, @pg?.seqnum || 0)
     stTransaction = new StellarBase.TransactionBuilder(stAccount)
     .addOperation(StellarBase.Operation.payment(
         destination: tx.destination
@@ -46,9 +46,10 @@ Accounts.helpers
         amount: tx.amount))
     .build()
 
-  performTransaction: (tx) ->
+  performTransaction: (tx) ->  
     stTransaction = @buildTransaction(tx)
     keypair = StellarBase.Keypair.fromSeed(@seed)
     stTransaction.sign(keypair)
     blob = stTransaction.toEnvelope().toXDR().toString('base64')
-    result = $.getJSON(TX_ENDPOINT+blob)
+    result = $.getJSON(TX_ENDPOINT+encodeURIComponent(blob))
+

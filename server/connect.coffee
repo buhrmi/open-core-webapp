@@ -4,6 +4,15 @@ throw 'Please specify Postgres connection string in CORE_DB_URL environment vari
 
 liveDb = new LivePg(CORE_DB_URL, 'opencore');
 
+# Keep Mongo Accounts in sync with PG accounts
+firstRun = true
+liveDb
+  .select("SELECT * FROM accounts")
+  .on 'update', Meteor.bindEnvironment (diff, data) ->
+    return firstRun = false if firstRun
+    for pgData in diff.added
+      Accounts.update(pgData.accountid, {$set: {pg: pgData}})
+
 Meteor.publish 'lastLedgerHeaders', ->
   liveDb.select('SELECT * FROM ledgerheaders ORDER BY closetime DESC limit 10')
 
