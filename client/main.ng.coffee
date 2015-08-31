@@ -1,4 +1,5 @@
-Meteor.subscribe 'allAccounts'
+Meteor.subscribe 'recentAccounts'
+Meteor.subscribe 'myAccounts'
 
 angular.module 'opencore', ['angular-meteor', 'ngRoute', 'ngCookies', 'stellarPostgres']
 
@@ -20,11 +21,6 @@ angular.module 'opencore', ['angular-meteor', 'ngRoute', 'ngCookies', 'stellarPo
       currentUser: ($meteor) ->
         $meteor.waitForUser()
 
-.filter 'isValidAccount', ->
-  (account) ->
-    account = Accounts._transform(account)
-    account.isValid()
-
 # .filter 'sign', ->
 #   (object) ->
 #     return unless object?.seed && object?.data
@@ -35,6 +31,34 @@ angular.module 'opencore', ['angular-meteor', 'ngRoute', 'ngCookies', 'stellarPo
 #       StellarBase.sign(data, secretKey).toString('hex')
 #     # StellarBase.sign(object.data, keypair.rawSeed())
 
+.filter 'formatAsset', ->
+  (asset) ->
+    if asset.isNative()
+      'NATIVE'
+    else
+      asset.code + '/' + asset.issuer
+
+.filter 'displayOperation', ($filter)->
+  (operation) ->
+    if operation.type == 'createAccount'
+      return "Destination: " + operation.destination + ", starting balance:" + operation.startingBalance
+    else if operation.type == 'manageOffer'
+      ops = "Creating offer, "
+      if operation.orderId != 0
+        if operation.amount == 0
+          ops = "Updating offer, "
+       else
+         ops = "Cancelling order, "
+      return ops + "amount: " + operation.amount +
+        ", price " + operation.price +
+        ", selling: " + $filter('formatAsset')(operation.selling) +
+        ", buying: " + $filter('formatAsset')(operation.buying)
+    else if operation.type == 'payment'
+      return "payment of " +  operation.amount + " " + $filter('formatAsset')(operation.asset) + " to " + operation.destination
+    else if operation.type == 'changeTrust'
+      return " limit set to  " + operation.limit + " for " + $filter('formatAsset')(operation.line)
+    else
+      return operation
 
 .directive 'ocAddress', ->
   restrict: 'A'
@@ -69,7 +93,10 @@ angular.module 'opencore', ['angular-meteor', 'ngRoute', 'ngCookies', 'stellarPo
   $scope.$meteorAutorun ->
     pgTransactions = stellarData.transactions.reactive()
     $scope.transactions = for pgTransaction in pgTransactions
-      new StellarBase.Transaction(pgTransaction.txbody)
+      {
+        body: new StellarBase.Transaction(pgTransaction.txbody)
+        result: StellarBase.xdr.TransactionResultPair.fromXDR(new Buffer(pgTransaction.txresult, 'base64'))
+      }
 
   $scope.$meteorAutorun ->
     $scope.offers = stellarData.offers.reactive()

@@ -29,9 +29,9 @@ span(ng-hide="newAccount.seedIsValid()") Seed is NOT valid!
 p OR sign the following text and copy the result into the 'signature' field.
 pre {{currentUser._id}}
 input(ng-model="newAccount.verification" placeholder="Signature")
-button(ng-hide="newAccount | isValidAccount" disabled) Add Account
-button(ng-show="newAccount | isValidAccount" ng-click="saveAccount(newAccount)") Add Account
-span(ng-hide="newAccount | isValidAccount") Signature is NOT valid!
+button(ng-hide="newAccount.isValid()" disabled) Add Account
+button(ng-show="newAccount.isValid()" ng-click="saveAccount(newAccount)") Add Account
+span(ng-hide="newAccount.isValid()") Signature is NOT valid!
 
 //- h3 Make signature
 //- p You can use area to create a signature.

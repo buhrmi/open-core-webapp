@@ -8,7 +8,7 @@ h3 Network Stats
 h4 Recent Offers
 
 div.offer(ng-repeat="offer in offers")
- p 
+ p
    a(oc-address="{{offer.sellerid}}")
    | offers
    span(ng-show="offer.sellingissuer")
@@ -21,9 +21,20 @@ div.offer(ng-repeat="offer in offers")
    span(ng-hide="offer.buyingissuer") NATIVE
 
 h4 Last 10 Transactions
-div.transaction(ng-repeat="transaction in transactions")
-  div.operation(ng-repeat="operation in transaction.operations")
-    p {{operation.type}}, asset: {{operation.asset}}, dest: {{operation.destination}}
+table(class="table table-striped")
+  thead
+    tr
+      th Success
+      th Ledger
+      th Source
+      th Operations
+  tbody
+    tr(ng-repeat="transaction in transactions")
+      td {{transaction.result.result().result().switch().name}}
+      td {{transaction.body.sequence}}
+      td {{transaction.body.source}}
+      td
+        p(ng-repeat="operation in transaction.body.operations") {{operation | displayOperation}}
 
 h4 Last 10 Ledger Headers
 div(ng-repeat="ledgerheader in ledgerheaders")
