@@ -2,7 +2,7 @@
 
 if Meteor.isServer
   Meteor.publish 'myAccounts', ->
-    Accounts.find user_id: Meteor.userId()
+    Accounts.find user_id: @userId
   Meteor.publish 'recentAccounts', ->
     Accounts.find {}, fields:
       seed: false
@@ -31,8 +31,25 @@ Accounts.helpers
     try
       StellarBase.Keypair.fromSeed(@seed).address() == @_id
 
-  sign: ->
+  selfSign: ->
     try
       keypair = StellarBase.Keypair.fromSeed(@seed)
       secretKey = keypair.rawSecretKey()
       @verification = StellarBase.sign(@user_id, secretKey).toString('hex')
+
+  buildTransaction: (tx) ->
+    stAccount = new StellarBase.Account(@_id)
+    stTransaction = new StellarBase.TransactionBuilder(stAccount)
+    .addOperation(StellarBase.Operation.payment(
+        destination: tx.destination
+        asset: StellarBase.Asset.native()
+        amount: tx.amount))
+    .build()
+
+  performTransaction: (tx) ->
+    stTransaction = @buildTransaction(tx)
+    keypair = StellarBase.Keypair.fromSeed(@seed)
+    stTransaction.sign(keypair)
+    blob = stTransaction.toEnvelope().toXDR().toString('base64')
+    console.log(blob)
+    $.getJSON(TX_ENDPOINT+blob)

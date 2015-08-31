@@ -1,5 +1,5 @@
-Meteor.subscribe 'recentAccounts'
 Meteor.subscribe 'myAccounts'
+Meteor.subscribe 'recentAccounts'
 
 angular.module 'opencore', ['angular-meteor', 'ngRoute', 'ngCookies', 'stellarPostgres']
 
@@ -30,6 +30,10 @@ angular.module 'opencore', ['angular-meteor', 'ngRoute', 'ngCookies', 'stellarPo
 #       data = object.data || object.user_id
 #       StellarBase.sign(data, secretKey).toString('hex')
 #     # StellarBase.sign(object.data, keypair.rawSeed())
+
+.filter 'dispayAddress', ->
+  (address) ->
+
 
 .filter 'formatAsset', ->
   (asset) ->
