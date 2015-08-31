@@ -4,6 +4,7 @@ p This is a list of accounts that are either federated by this server or you hav
 .accounts.own
   .account(ng-repeat="account in userAccounts")
     .address Address: {{account._id}}
+    .sequence Sequence: {{account.pg.seqnum}}
     .name
       | Name:
       input(ng-model="account.name")
