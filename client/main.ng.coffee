@@ -17,7 +17,7 @@ angular.module 'opencore', ['angular-meteor', 'ngRoute', 'ngCookies', 'stellarPo
   $routeProvider.when '/mycore',
     templateUrl: 'templates/layout.html'
     controller: 'MyCoreController'
-    resolove:
+    resolve:
       currentUser: ($meteor) ->
         $meteor.waitForUser()
 
