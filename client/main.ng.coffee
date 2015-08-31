@@ -3,8 +3,11 @@ Meteor.subscribe 'recentAccounts'
 
 angular.module 'opencore', ['angular-meteor', 'ngRoute', 'ngCookies', 'stellarPostgres']
 
-.run ($meteor, $rootScope) ->
+.run ($meteor, $rootScope, stellarData) ->
   $rootScope.appName = 'OpenCore'
+  $rootScope.$meteorAutorun ->
+    headers = stellarData.ledgerheaders.reactive()
+    $rootScope.ledgerSeq = headers[0]?.ledgerseq
 
 .config ($locationProvider, $routeProvider) ->
   $locationProvider.html5Mode(true)

@@ -51,5 +51,4 @@ Accounts.helpers
     keypair = StellarBase.Keypair.fromSeed(@seed)
     stTransaction.sign(keypair)
     blob = stTransaction.toEnvelope().toXDR().toString('base64')
-    console.log(blob)
-    $.getJSON(TX_ENDPOINT+blob)
+    result = $.getJSON(TX_ENDPOINT+blob)
