@@ -30,7 +30,7 @@ table(class="table table-striped")
   tbody
     tr(ng-repeat="transaction in transactions")
       td {{transaction.result.result().result().switch().name}}
-      td {{transaction.body.sequence}}
+      td {{transaction.pg.ledgerseq}}
       td {{transaction.body.source}}
       td
         p(ng-repeat="operation in transaction.body.operations") {{operation | displayOperation}}

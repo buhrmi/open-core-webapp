@@ -60,3 +60,6 @@ Accounts.helpers
     builder = new StellarBase.TransactionBuilder(stAccount)
     builder.fee = 0
     builder
+
+  getGivenTrustlines: ->
+    Trustlines.find(accountid: @_id).fetch()

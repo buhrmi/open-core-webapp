@@ -1,5 +1,7 @@
-Meteor.subscribe 'myAccounts'
 Meteor.subscribe 'recentAccounts'
+Meteor.subscribe 'myAccounts'
+Meteor.subscribe 'givenTrustlines'
+Meteor.subscribe 'receivedTrustlines'
 
 angular.module 'opencore', ['angular-meteor', 'ngRoute', 'ngCookies', 'stellarPostgres']
 
@@ -83,7 +85,7 @@ angular.module 'opencore', ['angular-meteor', 'ngRoute', 'ngCookies', 'stellarPo
   $scope.saveAccount = (account) ->
     Accounts.insert(account)
 
-  $scope.userAccounts = $scope.$meteorCollection -> Meteor.user().getAccounts()
+  $scope.userAccounts    = $scope.$meteorCollection -> Meteor.user().getAccounts()
 
 .controller 'AccountsController', ($scope) ->
   $scope.resourceTitle = 'Accounts'
@@ -102,6 +104,7 @@ angular.module 'opencore', ['angular-meteor', 'ngRoute', 'ngCookies', 'stellarPo
     $scope.transactions = for pgTransaction in pgTransactions
       {
         body: new StellarBase.Transaction(pgTransaction.txbody)
+        pg: pgTransaction
         result: StellarBase.xdr.TransactionResultPair.fromXDR(new Buffer(pgTransaction.txresult, 'base64'))
       }
 
