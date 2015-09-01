@@ -37,19 +37,26 @@ Accounts.helpers
       secretKey = keypair.rawSecretKey()
       @verification = StellarBase.sign(@user_id, secretKey).toString('hex')
 
-  buildTransaction: (tx) ->
-    stAccount = new StellarBase.Account(@_id, @pg?.seqnum || 0)
-    stTransaction = new StellarBase.TransactionBuilder(stAccount)
-    .addOperation(StellarBase.Operation.payment(
-        destination: tx.destination
-        asset: StellarBase.Asset.native()
-        amount: tx.amount))
-    .build()
+  buildTransaction: (txParams) ->
+    if txParams.type == 'manageTrust'
+      asset = new StellarBase.Asset(txParams.asset.code, txParams.asset.issuer)
+      console.log('making tx from', txParams)
+      @transactionBuilder()
+      .addOperation StellarBase.Operation.changeTrust
+        asset: asset
+        limit: txParams.limit
+      .build()
 
-  performTransaction: (tx) ->  
-    stTransaction = @buildTransaction(tx)
+  performTransaction: (txParams) ->  
+    stTransaction = @buildTransaction(txParams)
     keypair = StellarBase.Keypair.fromSeed(@seed)
     stTransaction.sign(keypair)
+    console.log(stTransaction)
     blob = stTransaction.toEnvelope().toXDR().toString('base64')
     result = $.getJSON(TX_ENDPOINT+encodeURIComponent(blob))
 
+  transactionBuilder: ->
+    stAccount = new StellarBase.Account(@_id, @pg?.seqnum || 0)
+    builder = new StellarBase.TransactionBuilder(stAccount)
+    builder.fee = 0
+    builder
