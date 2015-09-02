@@ -40,7 +40,6 @@ Accounts.helpers
   buildTransaction: (txParams) ->
     if txParams.type == 'manageTrust'
       asset = new StellarBase.Asset(txParams.asset.code, txParams.asset.issuer)
-      console.log('making tx from', txParams)
       @transactionBuilder()
       .addOperation StellarBase.Operation.changeTrust
         asset: asset
@@ -51,7 +50,6 @@ Accounts.helpers
     stTransaction = @buildTransaction(txParams)
     keypair = StellarBase.Keypair.fromSeed(@seed)
     stTransaction.sign(keypair)
-    console.log(stTransaction)
     blob = stTransaction.toEnvelope().toXDR().toString('base64')
     result = $.getJSON(TX_ENDPOINT+encodeURIComponent(blob))
 
@@ -62,4 +60,5 @@ Accounts.helpers
     builder
 
   getGivenTrustlines: ->
-    Trustlines.find(accountid: @_id).fetch()
+    Trustlines.find({accountid: @_id}).fetch()
+

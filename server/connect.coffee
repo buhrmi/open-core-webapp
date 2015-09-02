@@ -5,25 +5,19 @@ throw 'Please specify Postgres connection string in CORE_DB_URL environment vari
 liveDb = new LivePg(CORE_DB_URL, 'opencore');
 
 # Keep Mongo Accounts in sync with PG accounts
-firstAccountSync = true
 liveDb
-  .select("SELECT * FROM accounts")
+  .select("SELECT * FROM accounts ORDER BY lastmodified DESC limit 10")
   .on 'update', Meteor.bindEnvironment (diff, data) ->
-    return firstAccountSync = false if firstAccountSync
-    for pgData in diff.added?
-      Accounts.update(pgData.accountid, {$set: {pg: pgData}})
-
-firstTrustlineSync = true
-liveDb
-  .select("SELECT * FROM trustlines")
-  .on 'update', Meteor.bindEnvironment (diff, data) ->
-    return firstTrustlineSync = false if firstTrustlineSync
-    if diff.removed
-      for pgData in diff.removed
-        Trustlines.remove accountid:pgData.accountid,accountid:pgData.issuer,accountid:pgData.assetcode
     if diff.added
       for pgData in diff.added
-        Trustlines.upsert({accountid:pgData.accountid,accountid:pgData.issuer,accountid:pgData.assetcode},pgData)
+        Accounts.update(pgData.accountid, {$set: {pg: pgData}})
+
+liveDb
+  .select("SELECT * FROM trustlines ORDER BY lastmodified DESC limit 10")
+  .on 'update', Meteor.bindEnvironment (diff, data) ->
+    if diff.added
+      for pgData in diff.added
+        Trustlines.upsert({accountid:pgData.accountid,issuer:pgData.issuer,assetcode:pgData.assetcode},pgData)
 
 
 Meteor.publish 'lastLedgerHeaders', ->

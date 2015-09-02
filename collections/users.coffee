@@ -1,3 +1,3 @@
 Meteor.users.helpers
-  getAccounts: ->
-    Accounts.find user_id: @_id
+  getAccounts: (cacheRelations) ->
+    accounts = Accounts.find user_id: @_id

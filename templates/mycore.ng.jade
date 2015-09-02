@@ -18,13 +18,13 @@ p This is a list of accounts that are either federated by this server or you hav
       .asset
     .trustlines.given
       h4 Trustlines
-      .trustline(ng-repeat="trustline in account.getGivenTrustlines()")
-        //- .issuer Issuer: {{trustline.issuer}}
+      .trustline(ng-repeat="trustline in trustlines[account._id]")
         .code Asset Code: {{trustline.assetcode}}
-        //- .limit Limit: {{trustline.tlimit}}
-        //- .balance Balance: {{trustline.balance}}
-        //- .remove
-        //-   a(ng-click="account.performTransaction()") Click here to remove this trust
+        .issuer Issuer: {{trustline.issuer}}
+        .limit Limit: {{trustline.tlimit}}
+        .balance Balance: {{trustline.balance}}
+        .remove
+           a(ng-click="account.performTransaction()") Click here to remove this trust
     .make_transaction
       //- h4 Make Payment Transaction
       //- input(ng-model="tx.destination" placeholder="Destination")

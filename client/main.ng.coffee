@@ -1,10 +1,20 @@
-Meteor.subscribe 'recentAccounts'
-Meteor.subscribe 'myAccounts'
-Meteor.subscribe 'givenTrustlines'
-Meteor.subscribe 'receivedTrustlines'
+# TODO: extract subscription building process into angular provider or something...
+defaultSubscriptions = [
+  'recentAccounts',
+  'receivedTrustlines',
+  'myAccounts',
+  'givenTrustlines'
+]
+subscriptionPromises = {}
+defaultResolves = {}
+_.each defaultSubscriptions, (subName) ->
+  defaultResolves[subName] = ($meteor)->
+    "ngInject"
+    return subscriptionPromises[subName] if subscriptionPromises[subName]
+    subscriptionPromises[subName] = $meteor.subscribe(subName)
+
 
 angular.module 'opencore', ['angular-meteor', 'ngRoute', 'ngCookies', 'stellarPostgres']
-
 .run ($meteor, $rootScope, stellarData) ->
   $rootScope.appName = 'OpenCore'
   $rootScope.$meteorAutorun ->
@@ -16,14 +26,17 @@ angular.module 'opencore', ['angular-meteor', 'ngRoute', 'ngCookies', 'stellarPo
   $routeProvider.when '/',
     templateUrl: 'templates/layout.html'
     controller: 'OverviewController'
+    resolve: defaultResolves
   $routeProvider.when '/accounts',
     templateUrl: 'templates/layout.html'
     controller: 'AccountsController'
+    resolve: defaultResolves
   $routeProvider.when '/mycore',
     templateUrl: 'templates/layout.html'
     controller: 'MyCoreController'
-    resolve:
+    resolve: $.extend defaultResolves,
       currentUser: ($meteor) ->
+        "ngInject"
         $meteor.waitForUser()
 
 # .filter 'sign', ->
@@ -84,8 +97,14 @@ angular.module 'opencore', ['angular-meteor', 'ngRoute', 'ngCookies', 'stellarPo
 
   $scope.saveAccount = (account) ->
     Accounts.insert(account)
-
-  $scope.userAccounts    = $scope.$meteorCollection -> Meteor.user().getAccounts()
+  
+  $scope.userAccounts  = $scope.$meteorCollection -> Meteor.user().getAccounts()
+  $scope.$meteorAutorun ->
+    accountIds = (acc._id for acc in $scope.userAccounts)
+    trustlines = {}
+    for accId in accountIds
+      trustlines[accId] = Trustlines.find({accountid: accId}).fetch()
+    $scope.trustlines = trustlines
 
 .controller 'AccountsController', ($scope) ->
   $scope.resourceTitle = 'Accounts'
