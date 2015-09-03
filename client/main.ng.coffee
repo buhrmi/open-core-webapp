@@ -1,9 +1,9 @@
 # TODO: extract subscription building process into angular provider or something...
 defaultSubscriptions = [
   'recentAccounts',
-  'receivedTrustlines',
   'myAccounts',
-  'givenTrustlines'
+  'givenTrustlines',
+  'madeOffers'
 ]
 subscriptionPromises = {}
 defaultResolves = {}
@@ -99,12 +99,20 @@ angular.module 'opencore', ['angular-meteor', 'ngRoute', 'ngCookies', 'stellarPo
     Accounts.insert(account)
   
   $scope.userAccounts  = $scope.$meteorCollection -> Meteor.user().getAccounts()
+  accountIds = (acc._id for acc in $scope.userAccounts)
+  
   $scope.$meteorAutorun ->
-    accountIds = (acc._id for acc in $scope.userAccounts)
     trustlines = {}
     for accId in accountIds
       trustlines[accId] = Trustlines.find({accountid: accId}).fetch()
     $scope.trustlines = trustlines
+
+  $scope.$meteorAutorun ->
+    offers = {}
+    for accId in accountIds
+      offers[accId] = Offers.find({sellerid: accId}).fetch()
+    $scope.offers = offers
+
 
 .controller 'AccountsController', ($scope) ->
   $scope.resourceTitle = 'Accounts'

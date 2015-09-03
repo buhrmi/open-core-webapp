@@ -13,12 +13,33 @@ liveDb
         Accounts.update(pgData.accountid, {$set: {pg: pgData}})
 
 liveDb
-  .select("SELECT * FROM trustlines ORDER BY lastmodified DESC limit 10")
+  .select "SELECT * FROM trustlines ORDER BY lastmodified DESC limit 10",
+    trustlines: Meteor.bindEnvironment (row, op) ->
+      row.accountid = String(row.accountid)
+      if op == 'INSERT' or op == 'UPDATE1'
+        Trustlines.upsert({accountid:row.accountid,assetcode:row.assetcode,issuer:row.issuer}, row)
+      if op == 'DELETE'
+        Trustlines.remove({accountid:row.accountid,assetcode:row.assetcode,issuer:row.issuer})
   .on 'update', Meteor.bindEnvironment (diff, data) ->
     if diff.added
-      for pgData in diff.added
-        Trustlines.upsert({accountid:pgData.accountid,issuer:pgData.issuer,assetcode:pgData.assetcode},pgData)
+      for row in diff.added
+        row.accountid = String(row.accountid)
+        Trustlines.upsert({_id:row.accountid,assetcode:row.assetcode,issuer:row.issuer}, row)
 
+liveDb
+  .select "SELECT * FROM offers ORDER BY lastmodified DESC limit 10",
+    offers: Meteor.bindEnvironment (row, op) ->
+      row.offerid = String(row.offerid)
+      if op == 'INSERT' or op == 'UPDATE1'
+        Offers.upsert({_id:row.offerid}, row)
+      if op == 'DELETE'
+        Offers.remove({_id:row.offerid})
+  .on 'update', Meteor.bindEnvironment (diff, data) ->
+    if diff.added
+      for row in diff.added
+        row.offerid = String(row.offerid)
+        Offers.upsert({_id:row.offerid}, row)
+        
 
 Meteor.publish 'lastLedgerHeaders', ->
   liveDb.select('SELECT * FROM ledgerheaders ORDER BY closetime DESC limit 10')

@@ -16,27 +16,40 @@ p This is a list of accounts that are either federated by this server or you hav
     .assets
       h4 Assets
       .asset
-    .trustlines.given
-      h4 Trustlines
+    .trustlines
+      h4(ng-init="trustTx.type='manageTrust'") Trustlines
       .trustline(ng-repeat="trustline in trustlines[account._id]")
         .code Asset Code: {{trustline.assetcode}}
         .issuer Issuer: {{trustline.issuer}}
         .limit Limit: {{trustline.tlimit}}
         .balance Balance: {{trustline.balance}}
         .remove
-           a(ng-click="account.performTransaction()") Click here to remove this trust
-    .make_transaction
+           a(ng-click="trustline.manage({limit: 0})") Cancel Trust
       //- h4 Make Payment Transaction
       //- input(ng-model="tx.destination" placeholder="Destination")
       //- input(ng-model="tx.amount" placeholder="Amount")
       //- button(ng-click="account.performTransaction(tx)") Send
-      h4(ng-init="trustTx.type='manageTrust'") Manage Trust
-      input(ng-model="trustTx.asset.issuer" placeholder="Issuer")
+      input( ng-model="trustTx.asset.issuer" placeholder="Issuer")
       input(ng-model="trustTx.asset.code" placeholder="Code")
       input(ng-model="trustTx.limit" placeholder="limit")
       button(ng-click="account.performTransaction(trustTx)") Send TX
-      h4(ng-init="tx.type='trust'") Create Offer
 
+    .offers
+      h4(ng-init="offerTx.type='manageOffer'") Offers
+      .offer(ng-repeat="offer in offers[account._id]")
+        .want Want: {{offer.buyingissuer}}/{{offer.buyingassetcode}}
+        .have Have: {{offer.sellingissuer}}/{{offer.sellingassetcode}}
+        .amount Amount: {{offer.amount}}
+        .price Price: {{offer.price}}
+        .remove
+           a(ng-click="offer.manage({amount: '0'})") Cancel Offer
+      input(ng-model="offerTx.want.issuer" placeholder="Want Address")
+      input(ng-model="offerTx.want.code" placeholder="Want Code")
+      input(ng-model="offerTx.have.issuer" placeholder="Have Address")
+      input(ng-model="offerTx.have.code" placeholder="Have Code")
+      input(ng-model="offerTx.amount" placeholder="amount")
+      input(ng-model="offerTx.price" placeholder="price")
+      button(ng-click="account.performTransaction(offerTx)") Send TX
 
 h4 Add Account
 

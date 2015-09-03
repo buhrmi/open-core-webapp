@@ -3,6 +3,7 @@
 if Meteor.isServer
   Meteor.publish 'myAccounts', ->
     Accounts.find user_id: @userId
+  # Instead of recent accounts, manage a subscription of "viewed" accounts
   Meteor.publish 'recentAccounts', ->
     Accounts.find {}, fields:
       seed: false
@@ -45,9 +46,23 @@ Accounts.helpers
         asset: asset
         limit: txParams.limit
       .build()
+    else if txParams.type == 'manageOffer'
+      want = new StellarBase.Asset(txParams.want.code, txParams.want.issuer)
+      have = new StellarBase.Asset(txParams.have.code, txParams.have.issuer)
+      @transactionBuilder()
+      .addOperation StellarBase.Operation.manageOffer
+        offerid: txParams.offerid
+        selling: have
+        buying: want
+        amount: txParams.amount
+        price: txParams.price / 10000000
+      .build()
 
   performTransaction: (txParams) ->  
     stTransaction = @buildTransaction(txParams)
+    @submitTransaction(stTransaction)
+
+  submitTransaction: (stTransaction) ->
     keypair = StellarBase.Keypair.fromSeed(@seed)
     stTransaction.sign(keypair)
     blob = stTransaction.toEnvelope().toXDR().toString('base64')
