@@ -6,6 +6,7 @@
     .name
       | Name:
       input(ng-model="account.name")
+      button(ng-click="account.performTransaction({type:'options', homeDomain:account.name})") Set as Domain
     .seed
       | Secret Seed:
       input(ng-model="account.seed")

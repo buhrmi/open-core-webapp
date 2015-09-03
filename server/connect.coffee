@@ -1,8 +1,10 @@
-CORE_DB_URL = process.env['CORE_DB_URL'] 
+CORE_DB_URL = process.env['CORE_DB_URL']
 
 throw 'Please specify Postgres connection string in CORE_DB_URL environment variable' unless CORE_DB_URL
 
 liveDb = new LivePg(CORE_DB_URL, 'opencore');
+
+#TODO: subscribe to postgres user account to sync sequence
 
 # Keep Mongo Accounts in sync with PG accounts
 liveDb
@@ -10,7 +12,9 @@ liveDb
   .on 'update', Meteor.bindEnvironment (diff, data) ->
     if diff.added
       for pgData in diff.added
-        Accounts.update(pgData.accountid, {$set: {pg: pgData}})
+        upd = {pg: pgData}
+        upd.name = pg.homeDomain if pg.homeDomain
+        Accounts.upsert({_id: pgData.accountid}, upd)
 
 liveDb
   .select "SELECT * FROM trustlines ORDER BY lastmodified DESC limit 10",

@@ -65,7 +65,11 @@ Accounts.helpers
         asset: asset
         amount: txParams.amount
       .build()
-
+    else if txParams.type == 'options'
+      @transactionBuilder()
+      .addOperation StellarBase.Operation.setOptions
+        homeDomain: txParams.homeDomain
+      .build()
 
   performTransaction: (txParams) ->  
     stTransaction = @buildTransaction(txParams)
