@@ -11,10 +11,11 @@ liveDb
   .select("SELECT * FROM accounts ORDER BY lastmodified DESC limit 10")
   .on 'update', Meteor.bindEnvironment (diff, data) ->
     if diff.added
-      for pgData in diff.added
-        upd = {pg: pgData}
-        upd.name = pg.homeDomain if pg.homeDomain
-        Accounts.upsert({_id: pgData.accountid}, upd)
+      for row in diff.added
+        upd = {pg: row}
+        upd.name = row.homedomain if row.homedomain
+
+        Accounts.upsert({_id: row.accountid}, {$set: upd})
 
 liveDb
   .select "SELECT * FROM trustlines ORDER BY lastmodified DESC limit 10",
