@@ -12,11 +12,6 @@ if Meteor.isServer
 # Fields: user_id, verification
 
 Accounts.allow
-  insert: (userId, account) ->
-    return false unless userId && account.user_id == userId # TODO: or userId is admin
-    return false unless Accounts._transform(account).isValid()
-    true
-
   update: (userId, account) ->
     return false unless userId && account.user_id == userId # TODO: or userId is admin
     return false unless Accounts._transform(account).isValid()

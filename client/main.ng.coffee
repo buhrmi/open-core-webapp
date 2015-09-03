@@ -108,7 +108,7 @@ angular.module 'opencore', ['angular-meteor', 'ngRoute', 'ngCookies', 'stellarPo
   $scope.userAccounts = $scope.$meteorCollection -> Meteor.user().getAccounts()
 
   $scope.saveAccount = (account) ->
-    Accounts.insert(account)
+    Meteor.call('createAccount', account)
   $scope.useAccount = (account) ->
     $scope.$root.currentAccount = account
   
