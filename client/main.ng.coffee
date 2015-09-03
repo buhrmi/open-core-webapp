@@ -20,6 +20,8 @@ angular.module 'opencore', ['angular-meteor', 'ngRoute', 'ngCookies', 'stellarPo
   $rootScope.$meteorAutorun ->
     headers = stellarData.ledgerheaders.reactive()
     $rootScope.ledgerSeq = headers[0]?.ledgerseq
+  $rootScope.$meteorAutorun ->
+    $rootScope.currentAccount = Accounts.findOne(user_id: Meteor.userId())
 
 .config ($locationProvider, $routeProvider) ->
   $locationProvider.html5Mode(true)
@@ -34,6 +36,13 @@ angular.module 'opencore', ['angular-meteor', 'ngRoute', 'ngCookies', 'stellarPo
   $routeProvider.when '/mycore',
     templateUrl: 'templates/layout.html'
     controller: 'MyCoreController'
+    resolve: $.extend defaultResolves,
+      currentUser: ($meteor) ->
+        "ngInject"
+        $meteor.waitForUser()
+  $routeProvider.when '/mycore/accounts',
+    templateUrl: 'templates/layout.html'
+    controller: 'MyCoreAccountsController'
     resolve: $.extend defaultResolves,
       currentUser: ($meteor) ->
         "ngInject"
@@ -87,31 +96,36 @@ angular.module 'opencore', ['angular-meteor', 'ngRoute', 'ngCookies', 'stellarPo
   link: (scope, el, attrs) ->
     account = Accounts.find attrs.ocAddress
     el.attr 'href', "/account/#{attrs.ocAddress}"
-    el.html account?.name || ' unknown'
+    el.attr 'title', attrs.ocAddress
+    el.html account?.name || attrs.ocAddress.slice(0,7)+'...'
+
+
+.controller 'MyCoreAccountsController', ($scope, $rootScope) ->
+  $scope.resourceTitle = 'My Core > Accounts'
+  $scope.resourceTemplate = 'templates/mycore/accounts.html'
+
+  $scope.newAccount = Accounts._transform(user_id: Meteor.userId())
+  $scope.userAccounts = $scope.$meteorCollection -> Meteor.user().getAccounts()
+
+  $scope.saveAccount = (account) ->
+    Accounts.insert(account)
+  $scope.useAccount = (account) ->
+    $scope.$root.currentAccount = account
+  
 
 .controller 'MyCoreController', ($scope) ->
   $scope.resourceTitle = 'My Core'
   $scope.resourceTemplate = 'templates/mycore.html'
-
-  $scope.newAccount = Accounts._transform(user_id: Meteor.userId())
-
-  $scope.saveAccount = (account) ->
-    Accounts.insert(account)
   
-  $scope.userAccounts  = $scope.$meteorCollection -> Meteor.user().getAccounts()
-  accountIds = (acc._id for acc in $scope.userAccounts)
-  
-  $scope.$meteorAutorun ->
-    trustlines = {}
-    for accId in accountIds
-      trustlines[accId] = Trustlines.find({accountid: accId}).fetch()
-    $scope.trustlines = trustlines
+  $scope.$meteorAutorun ->    
+    acc = $scope.getReactively('currentAccount')
+    if acc
+      $scope.trustlines = Trustlines.find({accountid: acc._id}).fetch()
 
   $scope.$meteorAutorun ->
-    offers = {}
-    for accId in accountIds
-      offers[accId] = Offers.find({sellerid: accId}).fetch()
-    $scope.offers = offers
+    acc = $scope.getReactively('currentAccount')
+    if acc
+      $scope.offers = Offers.find({sellerid: acc._id}).fetch()
 
 
 .controller 'AccountsController', ($scope) ->

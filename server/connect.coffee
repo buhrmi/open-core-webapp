@@ -1,4 +1,4 @@
-CORE_DB_URL = process.env['CORE_DB_URL']
+CORE_DB_URL = process.env['CORE_DB_URL'] 
 
 throw 'Please specify Postgres connection string in CORE_DB_URL environment variable' unless CORE_DB_URL
 
@@ -24,7 +24,7 @@ liveDb
     if diff.added
       for row in diff.added
         row.accountid = String(row.accountid)
-        Trustlines.upsert({_id:row.accountid,assetcode:row.assetcode,issuer:row.issuer}, row)
+        Trustlines.upsert({accountid:row.accountid,assetcode:row.assetcode,issuer:row.issuer}, row)
 
 liveDb
   .select "SELECT * FROM offers ORDER BY lastmodified DESC limit 10",

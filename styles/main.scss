@@ -30,6 +30,7 @@ $myCoreColor: #2e8965;
     margin-right: 14px;
     float: right;
     position: relative;
+    border-right: 1px solid white;
     .login-link-text {
       height: $topbarHeight;
       padding: 6px 14px;
@@ -43,6 +44,15 @@ $myCoreColor: #2e8965;
       padding: 16px;
       background-color: rgba($brandColor, 0.3);
     }
+  }
+}
+#userbar {
+  background-color: lighten($brandColor, 10);
+  color: white;
+  padding: 6px 14px;
+  .switch {
+    float: right;
+    color: white;
   }
 }
 
@@ -78,10 +88,31 @@ $myCoreColor: #2e8965;
   }
 }
 
-.accounts.own {
+.accounts {
   .account {
     padding: 12px;
     background: #efefef;
     border: 1px solid #cecece;
+  }
+}
+
+.balance {
+  display: inline-block;
+  border: 1px solid lighten($brandColor, 30);
+  padding: 6px 14px;
+  .issuer {
+    
+  }
+  .actions {
+    display: none;
+  }
+  .amount {
+    font-size: 1.3em;
+  }
+  margin-right: 6px;
+  margin-bottom: 6px;
+  &:hover {
+    background-color: lighten($brandColor, 40);
+    cursor: pointer;
   }
 }

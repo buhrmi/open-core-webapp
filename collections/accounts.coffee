@@ -55,8 +55,17 @@ Accounts.helpers
         selling: have
         buying: want
         amount: txParams.amount
-        price: txParams.price / 10000000
+        price: txParams.price
       .build()
+    else if txParams.type == 'payment'
+      asset = new StellarBase.Asset(txParams.asset.code, txParams.asset.issuer)
+      @transactionBuilder()
+      .addOperation StellarBase.Operation.payment
+        destination: txParams.destination
+        asset: asset
+        amount: txParams.amount
+      .build()
+
 
   performTransaction: (txParams) ->  
     stTransaction = @buildTransaction(txParams)

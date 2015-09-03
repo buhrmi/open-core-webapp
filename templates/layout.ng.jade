@@ -1,4 +1,5 @@
 div(ng-include="'templates/topbar.html'")
+div(ng-if="currentUser" ng-include="'templates/userbar.html'")
 div(ng-include="'templates/sidebar.html'")
 
 #main

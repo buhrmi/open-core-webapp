@@ -1,71 +1,47 @@
-h3 My Accounts
-p This is a list of accounts that are either federated by this server or you have proven ownership.
+h3 {{currentAccount.name}}
+p {{currentAccount._id}}
+ 
+.balances
+  h4(ng-init="trustTx.type='manageTrust'") Balances
+  .balance(ng-repeat="trustline in trustlines")
+    .amount
+      | {{trustline.balance}}
+      | 
+      span.code {{trustline.assetcode}}
+    a.issuer(oc-address="{{trustline.issuer}}")
+    .limit Limit: {{trustline.tlimit}}
+    .actions
+       a(ng-click="trustline.manage({limit: 0})") Cancel Trust
+input( ng-model="trustTx.asset.issuer" placeholder="Issuer")
+input(ng-model="trustTx.asset.code" placeholder="Code")
+input(ng-model="trustTx.limit" placeholder="Limit")
+button(ng-click="currentAccount.performTransaction(trustTx)") Send TX
 
-.accounts.own
-  .account(ng-repeat="account in userAccounts")
-    .address Address: {{account._id}}
-    .sequence Sequence: {{account.pg.seqnum}}
-    .name
-      | Name:
-      input(ng-model="account.name")
-    .seed
-      | Secret Seed:
-      input(ng-model="account.seed")
-      | (optional: you can store your secret seed on this server if you want your account to be federated. Only use this if your connection is secure.)
-      span(ng-hide="account.seedIsValid()") Invalid seed.
-    .assets
-      h4 Assets
-      .asset
-    .trustlines
-      h4(ng-init="trustTx.type='manageTrust'") Trustlines
-      .trustline(ng-repeat="trustline in trustlines[account._id]")
-        .code Asset Code: {{trustline.assetcode}}
-        .issuer Issuer: {{trustline.issuer}}
-        .limit Limit: {{trustline.tlimit}}
-        .balance Balance: {{trustline.balance}}
-        .remove
-           a(ng-click="trustline.manage({limit: 0})") Cancel Trust
-      //- h4 Make Payment Transaction
-      //- input(ng-model="tx.destination" placeholder="Destination")
-      //- input(ng-model="tx.amount" placeholder="Amount")
-      //- button(ng-click="account.performTransaction(tx)") Send
-      input( ng-model="trustTx.asset.issuer" placeholder="Issuer")
-      input(ng-model="trustTx.asset.code" placeholder="Code")
-      input(ng-model="trustTx.limit" placeholder="limit")
-      button(ng-click="account.performTransaction(trustTx)") Send TX
+.offers
+  h4(ng-init="offerTx.type='manageOffer'") Offers
+  .offer(ng-repeat="offer in offers")
+    .want Want: {{offer.buyingissuer}}/{{offer.buyingassetcode}}
+    .have Have: {{offer.sellingissuer}}/{{offer.sellingassetcode}}
+    .amount Amount: {{offer.amount}}
+    .price Price: {{offer.price / 10000000}}
+    .remove
+       a(ng-click="offer.manage({amount: '0'})") Cancel Offer
+input(ng-model="offerTx.want.issuer" placeholder="Want Address")
+input(ng-model="offerTx.want.code" placeholder="Want Code")
+input(ng-model="offerTx.have.issuer" placeholder="Have Address")
+input(ng-model="offerTx.have.code" placeholder="Have Code")
+input(ng-model="offerTx.amount" placeholder="Amount")
+input(ng-model="offerTx.price" placeholder="Price")
+button(ng-click="currentAccount.performTransaction(offerTx)") Send TX
 
-    .offers
-      h4(ng-init="offerTx.type='manageOffer'") Offers
-      .offer(ng-repeat="offer in offers[account._id]")
-        .want Want: {{offer.buyingissuer}}/{{offer.buyingassetcode}}
-        .have Have: {{offer.sellingissuer}}/{{offer.sellingassetcode}}
-        .amount Amount: {{offer.amount}}
-        .price Price: {{offer.price}}
-        .remove
-           a(ng-click="offer.manage({amount: '0'})") Cancel Offer
-      input(ng-model="offerTx.want.issuer" placeholder="Want Address")
-      input(ng-model="offerTx.want.code" placeholder="Want Code")
-      input(ng-model="offerTx.have.issuer" placeholder="Have Address")
-      input(ng-model="offerTx.have.code" placeholder="Have Code")
-      input(ng-model="offerTx.amount" placeholder="amount")
-      input(ng-model="offerTx.price" placeholder="price")
-      button(ng-click="account.performTransaction(offerTx)") Send TX
+.payments
+  h4(ng-init="paymentTx.type='payment'") Send Credits
+  input(ng-model="paymentTx.destination" placeholder="Destination")
+  input(ng-model="paymentTx.asset.issuer" placeholder="Issuer")
+  input(ng-model="paymentTx.asset.code" placeholder="Code")
+  input(ng-model="paymentTx.amount" placeholder="Amount")
+  button(ng-click="currentAccount.performTransaction(paymentTx)") Send TX
 
-h4 Add Account
-
-input(ng-model="newAccount._id" placeholder="Address")
-input(ng-model="newAccount.name" placeholder="Account Name")
-
-h5 Verify Address Ownership
-p EITHER provide the secret seed (only do this if you trust this website)
-input(ng-model="newAccount.seed" placeholder="Secret Seed" ng-change="newAccount.selfSign()")
-span(ng-hide="newAccount.seedIsValid()") Seed is NOT valid!
-p OR sign the following text and copy the result into the 'signature' field.
-pre {{currentUser._id}}
-input(ng-model="newAccount.verification" placeholder="Signature")
-button(ng-hide="newAccount.isValid()" disabled) Add Account
-button(ng-show="newAccount.isValid()" ng-click="saveAccount(newAccount)") Add Account
-span(ng-hide="newAccount.isValid()") Signature is NOT valid!
 
 //- h3 Make signature
 //- p You can use area to create a signature.
