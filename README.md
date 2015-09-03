@@ -1,6 +1,8 @@
 # open-core
 Welcome to the Core. Take the red pill, and venture forth.
 
+This is a web application that can be used to interact with the [Core](http://github.com/buhrmi/core). It can also serve as a frontend for the [Stellar Galaxy Network](http://www.stellar.org/galaxy).
+
 # See it running
 http://open-core.meteor.com (temporary URL, server donation accepted :P)
 
@@ -9,7 +11,7 @@ http://open-core.meteor.com (temporary URL, server donation accepted :P)
 ## Prerequisits
 
 * Install [Meteor](http://meteor.com/install)
-* Gain access to a stellar-core postgres database. You can set one up yourself. See [here](https://github.com/stellar/stellar-core/blob/master/INSTALL.md) for installation instructions.
+* Access to a Core Postgres database. You can set one up yourself. See [here](https://github.com/buhrmi/core/blob/master/INSTALL.md) for installation instructions.
 * It also helps to be familiar with [Stellar](https://www.stellar.org/galaxy/)
 
 ## Clone and run
