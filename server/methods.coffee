@@ -6,6 +6,7 @@ Meteor.methods
     acc = Accounts.findOne(newAccount._id)
     if acc
       newAccount.name = acc.pg.homedomain if acc.pg?.homedomain
+      delete newAccount._id
       Accounts.update(acc._id, {$set: newAccount})
     else
       Accounts.insert(newAccount)

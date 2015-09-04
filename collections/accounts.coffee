@@ -2,6 +2,7 @@
 
 if Meteor.isServer
   Meteor.publish 'myAccounts', ->
+    return [] unless @userId
     Accounts.find user_id: @userId
   Meteor.publish 'accounts', (addresses) ->
     Accounts.find {_id: {$in:addresses}}, fields:
