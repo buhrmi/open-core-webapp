@@ -148,12 +148,13 @@ angular.module 'opencore', ['angular-meteor', 'ngRoute', 'ngCookies', 'stellarPo
   address = $routeParams.address
   dataService.subscribeAddresses([address])
   .then ->
-    $scope.account = account = Accounts.findOne(address)
-    if account.pg?.homedomain?
-      $scope.resourceTitle = account.pg.homedomain + ' / ' + account._id
-    $scope.transactions = account.getTransactions()
-    $scope.offers       = account.getOffers()
-    $scope.trustlines   = account.getGivenTrustlines()
+    $scope.$meteorAutorun ->
+      $scope.account = account = Accounts.findOne(address)
+      if account.pg?.homedomain?
+        $scope.resourceTitle = account.pg.homedomain + ' / ' + account._id
+      $scope.transactions = account.getTransactions()
+      $scope.offers       = account.getOffers()
+      $scope.trustlines   = account.getGivenTrustlines()
 
 
 .controller 'AccountsController', ($scope) ->

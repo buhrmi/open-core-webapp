@@ -12,4 +12,5 @@ Transactions.handlePgUpdate = (row) ->
   result = StellarBase.xdr.TransactionResultPair.fromXDR(new Buffer(row.txresult, 'base64'))
   return unless result.result().result().switch().name == 'txSuccess'
   row.body = new StellarBase.Transaction(row.txbody)
+  row._id = row.txid
   Transactions.upsert({_id:row.txid}, row)
