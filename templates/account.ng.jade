@@ -4,5 +4,5 @@ h3 Transactions
 
 .transactions
   .transaction(ng-repeat="tx in transactions")
-    p hi
-
+    .operation(ng-repeat="op in tx.body.operations")
+      p {{op | displayOperation}}

@@ -2,7 +2,6 @@
 
 if Meteor.isServer
   Meteor.publish 'myTransactions', ->
-    return unless @userId
     accs = Accounts.find user_id: @userId
     addresses = (acc._id for acc in accs.fetch())
     Transactions.find 'body.source': {$in:addresses}
