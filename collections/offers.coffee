@@ -1,9 +1,12 @@
 @Offers = new Mongo.Collection('cached_offers')
 
 if Meteor.isServer
-  Meteor.publish 'madeOffers', ->
+  Meteor.publish 'myOffers', ->
+    return unless @userId
     accs = Accounts.find user_id: @userId
     addresses = (acc._id for acc in accs.fetch())
+    Offers.find sellerid: {$in:addresses}
+  Meteor.publish 'offers', (addresses)->
     Offers.find sellerid: {$in:addresses}
 
 Offers.helpers

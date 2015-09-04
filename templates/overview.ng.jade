@@ -4,20 +4,20 @@ p You can <a href="http://github.com/buhrmi/open-core"> fork me on GitHub</a> or
 
 h3 Network Stats
 
-h4 Recent Offers
+//- h4 Recent Offers
 
-div.offer(ng-repeat="offer in offers")
- p
-   a(oc-address="{{offer.sellerid}}")
-   | offers
-   span(ng-show="offer.sellingissuer")
-     a(oc-address="{{offer.sellingissuer}}")
-     | 's {{offer.sellingassetcode}} for {{offer.price | number : 0}}
-   span(ng-hide="offer.sellingissuer") NATIVE
-   span(ng-show="offer.buyingissuer")
-     a(oc-address="{{offer.buyingissuer}}")
-     | 's {{offer.buyingassetcode}} ({{offer.amount}} available)
-   span(ng-hide="offer.buyingissuer") NATIVE
+//- div.offer(ng-repeat="offer in offers")
+//-  p
+//-    a(oc-address="{{offer.sellerid}}")
+//-    | offers
+//-    span(ng-show="offer.sellingissuer")
+//-      a(oc-address="{{offer.sellingissuer}}")
+//-      | 's {{offer.sellingassetcode}} for {{offer.price | number : 0}}
+//-    span(ng-hide="offer.sellingissuer") NATIVE
+//-    span(ng-show="offer.buyingissuer")
+//-      a(oc-address="{{offer.buyingissuer}}")
+//-      | 's {{offer.buyingassetcode}} ({{offer.amount}} available)
+//-    span(ng-hide="offer.buyingissuer") NATIVE
 
 h4 Last 10 Transactions
 table(class="table table-striped")
@@ -31,7 +31,8 @@ table(class="table table-striped")
     tr(ng-repeat="transaction in transactions")
       td {{transaction.result.result().result().switch().name}}
       td {{transaction.pg.ledgerseq}}
-      td {{transaction.body.source}}
+      td 
+        a(ng-href="/accounts/{{transaction.body.source}}") {{transaction.body.source}}
       td
         p(ng-repeat="operation in transaction.body.operations") {{operation | displayOperation}}
 

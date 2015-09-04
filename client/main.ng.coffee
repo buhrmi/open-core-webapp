@@ -1,9 +1,9 @@
 # TODO: extract subscription building process into angular provider or something...
 defaultSubscriptions = [
-  'recentAccounts',
   'myAccounts',
-  'givenTrustlines',
-  'madeOffers'
+  'myTrustlines',
+  'myOffers',
+  'myTransactions'
 ]
 subscriptionPromises = {}
 defaultResolves = {}
@@ -28,6 +28,10 @@ angular.module 'opencore', ['angular-meteor', 'ngRoute', 'ngCookies', 'stellarPo
   $routeProvider.when '/',
     templateUrl: 'templates/layout.html'
     controller: 'OverviewController'
+    resolve: defaultResolves
+  $routeProvider.when '/accounts/:address',
+    templateUrl: 'templates/layout.html'
+    controller: 'AccountController'
     resolve: defaultResolves
   $routeProvider.when '/accounts',
     templateUrl: 'templates/layout.html'
@@ -126,6 +130,30 @@ angular.module 'opencore', ['angular-meteor', 'ngRoute', 'ngCookies', 'stellarPo
     acc = $scope.getReactively('currentAccount')
     if acc
       $scope.offers = Offers.find({sellerid: acc._id}).fetch()
+
+.factory 'dataService', ($q, $meteor) ->
+  subscribeAddresses: (addresses) ->
+    $q.all([
+      $meteor.subscribe('trustlines', addresses),
+      $meteor.subscribe('offers', addresses),
+      $meteor.subscribe('transactions', addresses),
+      $meteor.subscribe('accounts', addresses)
+    ])
+  
+
+.controller 'AccountController', ($scope, $routeParams, dataService) ->
+  $scope.resourceTitle = $routeParams.address
+  $scope.resourceTemplate = 'templates/account.html'
+
+  address = $routeParams.address
+  dataService.subscribeAddresses([address])
+  .then ->
+    $scope.account = account = Accounts.findOne(address)
+    if account.pg?.homedomain?
+      $scope.resourceTitle = account.pg.homedomain + ' / ' + account._id
+    $scope.transactions = account.getTransactions()
+    $scope.offers       = account.getOffers()
+    $scope.trustlines   = account.getGivenTrustlines()
 
 
 .controller 'AccountsController', ($scope) ->

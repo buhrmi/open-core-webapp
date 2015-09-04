@@ -3,9 +3,8 @@
 if Meteor.isServer
   Meteor.publish 'myAccounts', ->
     Accounts.find user_id: @userId
-  # Instead of recent accounts, manage a subscription of "viewed" accounts
-  Meteor.publish 'recentAccounts', ->
-    Accounts.find {}, fields:
+  Meteor.publish 'accounts', (addresses) ->
+    Accounts.find {_id: {$in:addresses}}, fields:
       seed: false
 
 
@@ -85,3 +84,8 @@ Accounts.helpers
   getGivenTrustlines: ->
     Trustlines.find({accountid: @_id}).fetch()
 
+  getOffers: ->
+    Offers.find({sellerid: @_id}).fetch()
+
+  getTransactions: ->
+    Transactions.find({'body.source': @_id}).fetch()

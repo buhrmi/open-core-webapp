@@ -6,7 +6,7 @@
     .name
       | Name:
       input(ng-model="account.name")
-      button(ng-click="account.performTransaction({type:'options', homeDomain:account.name})") Set as Domain
+      button(ng-click="account.performTransaction({type:'options', homeDomain:account.name})") Broadcast to Core (Set as homedomain)
     .seed
       | Secret Seed:
       input(ng-model="account.seed")
@@ -16,7 +16,6 @@
 h4 Add Account
 
 input(ng-model="newAccount._id" placeholder="Address")
-input(ng-model="newAccount.name" placeholder="Account Name")
 
 h5 Verify Address Ownership
 p EITHER provide the secret seed (only do this if you trust this website)
