@@ -1,17 +1,9 @@
 h3 {{currentAccount.name}}
 p {{currentAccount._id}}
  
-.balances
+.trustlines
   h4(ng-init="trustTx.type='manageTrust'") Balances
-  .balance(ng-repeat="trustline in trustlines")
-    .amount
-      | {{trustline.balance}}
-      | 
-      span.code {{trustline.assetcode}}
-    a.issuer(oc-address="{{trustline.issuer}}")
-    .limit Limit: {{trustline.tlimit}}
-    .actions
-       a(ng-click="trustline.manage({limit: 0})") Cancel Trust
+  core-trustline(ng-repeat="trustline in trustlines")
 input( ng-model="trustTx.asset.issuer" placeholder="Issuer")
 input(ng-model="trustTx.asset.code" placeholder="Code")
 input(ng-model="trustTx.limit" placeholder="Limit")

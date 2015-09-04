@@ -1,6 +1,12 @@
-h4 Account Info
+h3 Account Info
 
-h3 Transactions
+h4 Acceptable Assets
+.assets
+  .asset(ng-repeat="assetcode in account.assetcodes")
+    
+core-trustline(ng-if="account" issuer="account._id" assetcode="'derp'")
+
+h4 Transactions
 
 .transactions
   .transaction(ng-repeat="tx in transactions")

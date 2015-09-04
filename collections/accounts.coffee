@@ -79,7 +79,7 @@ Accounts.helpers
   transactionBuilder: ->
     stAccount = new StellarBase.Account(@_id, @pg?.seqnum || 0)
     builder = new StellarBase.TransactionBuilder(stAccount)
-    builder.fee = 0
+    # builder.fee = 0
     builder
 
   getGivenTrustlines: ->
@@ -90,3 +90,14 @@ Accounts.helpers
 
   getTransactions: ->
     Transactions.find({'body.source': @_id}).fetch()
+
+  addAssetCode: (code) ->
+    check(code, String)
+    return false unless code.length > 12
+    @update $push: {assetcodes: code}
+
+  removeAssetCode: (code) ->
+    @update $pull: {assetcodes: code}
+
+  update: (operations) ->
+    Accounts.update @_id, operations

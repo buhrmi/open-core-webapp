@@ -14,7 +14,7 @@ _.each defaultSubscriptions, (subName) ->
     subscriptionPromises[subName] = $meteor.subscribe(subName)
 
 
-angular.module 'opencore', ['angular-meteor', 'ngRoute', 'ngCookies', 'stellarPostgres']
+angular.module 'opencore', ['angular-meteor', 'ngRoute', 'ngCookies', 'core']
 .run ($meteor, $rootScope, stellarData) ->
   $rootScope.appName = 'OpenCore'
   $rootScope.$meteorAutorun ->
@@ -95,15 +95,6 @@ angular.module 'opencore', ['angular-meteor', 'ngRoute', 'ngCookies', 'stellarPo
     else
       return operation
 
-.directive 'ocAddress', ->
-  restrict: 'A'
-  link: (scope, el, attrs) ->
-    account = Accounts.find attrs.ocAddress
-    el.attr 'href', "/account/#{attrs.ocAddress}"
-    el.attr 'title', attrs.ocAddress
-    el.html account?.name || attrs.ocAddress.slice(0,7)+'...'
-
-
 .controller 'MyCoreAccountsController', ($scope, $rootScope) ->
   $scope.resourceTitle = 'My Core > Accounts'
   $scope.resourceTemplate = 'templates/mycore/accounts.html'
@@ -144,7 +135,6 @@ angular.module 'opencore', ['angular-meteor', 'ngRoute', 'ngCookies', 'stellarPo
 .controller 'AccountController', ($scope, $routeParams, dataService) ->
   $scope.resourceTitle = $routeParams.address
   $scope.resourceTemplate = 'templates/account.html'
-
   address = $routeParams.address
   dataService.subscribeAddresses([address])
   .then ->

@@ -15,5 +15,14 @@ if Meteor.isServer
   # Meteor.publish 'recentTrustlines', ->
   #   Trustlines.find()
 
+Trustlines.helpers
+  manage: ->
+    true # TODO: impl.
+
+Trustlines.for = (accountid, issuer, assetcode) ->
+  params = {accountid: accountid, issuer: issuer, assetcode: assetcode}
+  t = Trustlines.findOne(params) || Trustlines._transform(params)
+  
+
 
 # Fields: user_id, verification
