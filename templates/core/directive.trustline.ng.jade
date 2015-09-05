@@ -4,11 +4,11 @@
     | 
     span.code {{trustline.assetcode}}
   a.issuer(core-address="trustline.issuer")
-  div(ng-if="currentAccount && currentAccount._id != trustline.issuer")
+  div(ng-if="currentAccount._id && currentAccount._id != trustline.issuer")
     .limit(ng-if="trustline.tlimit") Limit: {{trustline.tlimit}}
     .limit(ng-if="trustline.tlimit == 0") Untrusted
     .actions
       a(ng-if="trustline.tlimit" ng-click="trustline.manage({limit: '0'})") Cancel Trust
       button(ng-if="trustline.tlimit == 0" ng-click="trustline.manage({limit: 1})") Create Trust
-  div(ng-if="currentAccount && currentAccount._id == trustline.issuer") Issued by you
-  div(ng-hide="currentAccount") Sign in to Create Trust
+  div(ng-if="currentAccount._id && currentAccount._id == trustline.issuer") Issued by you
+  div(ng-hide="currentAccount._id") Sign in to Create Trust
