@@ -73,8 +73,9 @@ Accounts.helpers
   submitTransaction: (stTransaction) ->
     keypair = StellarBase.Keypair.fromSeed(@seed)
     stTransaction.sign(keypair)
+    console.log(stTransaction)
     blob = stTransaction.toEnvelope().toXDR().toString('base64')
-    result = $.getJSON(TX_ENDPOINT+encodeURIComponent(blob))
+    # result = $.getJSON(TX_ENDPOINT+encodeURIComponent(blob))
 
   transactionBuilder: ->
     stAccount = new StellarBase.Account(@_id, @pg?.seqnum || 0)

@@ -39,14 +39,14 @@ liveDb
     offers: Meteor.bindEnvironment (row, op) ->
       row.offerid = String(row.offerid)
       if op == 'INSERT' or op == 'UPDATE1'
-        Offers.upsert({_id:row.offerid}, row)
+        Offers.upsert({_id:row.offerid}, {$set: row})
       if op == 'DELETE'
         Offers.remove({_id:row.offerid})
       return false
   .on 'update', Meteor.bindEnvironment (diff, data) ->
     for row in data
       row.offerid = String(row.offerid)
-      Offers.upsert({_id:row.offerid}, row)
+      Offers.upsert({_id:row.offerid}, {$set: row})
 
 # Catch up on the recent 100 changes and set up sync
 liveDb

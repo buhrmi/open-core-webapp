@@ -21,8 +21,12 @@ angular.module 'opencore', ['angular-meteor', 'ngRoute', 'ngCookies', 'core']
     headers = stellarData.ledgerheaders.reactive()
     $rootScope.ledgerSeq = headers[0]?.ledgerseq
   # $rootScope.$meteorAutorun ->
-  #   $rootScope.currentAccount = Accounts.findOne(user_id: Meteor.userId())
-  $rootScope.currentAccount = $rootScope.$meteorObject(Accounts, user_id: Meteor.userId())
+    # $rootScope.currentAccount = Accounts.findOne(user_id: Meteor.userId())
+  $rootScope.$meteorAutorun ->
+    if Meteor.userId()
+      $rootScope.currentAccount = $rootScope.$meteorObject(Accounts, user_id: Meteor.userId())
+    else
+      $rootScope.currentAccount = false
 
 .config ($locationProvider, $routeProvider) ->
   $locationProvider.html5Mode(true)
