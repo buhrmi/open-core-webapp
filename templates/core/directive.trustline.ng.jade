@@ -1,0 +1,12 @@
+.trustline
+  .amount
+    | {{trustline.balance}}
+    | 
+    span.code {{trustline.assetcode}}
+  a.issuer(core-address="trustline.issuer")
+  
+  .limit(ng-if="trustline.tlimit") Limit: {{trustline.tlimit}}
+  .limit(ng-if="trustline.tlimit == 0") Untrusted
+  .actions
+    a(ng-if="trustline.tlimit" ng-click="trustline.manage({limit: '0'})") Cancel Trust
+    button(ng-if="trustline.tlimit == 0" ng-click="trustline.manage({limit: 1})") Create Trust

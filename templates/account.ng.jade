@@ -1,10 +1,10 @@
 h3 Account Info
 
-h4 Acceptable Assets
+h4 Assets issued by this address
 .assets
   .asset(ng-repeat="assetcode in account.assetcodes")
     
-core-trustline(ng-if="account" issuer="account._id" assetcode="'derp'")
+    core-trustline(issuer="account._id" assetcode="assetcode")
 
 h4 Transactions
 

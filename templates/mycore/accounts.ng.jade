@@ -1,29 +1,27 @@
 .accounts
   .account(ng-repeat="account in userAccounts")
-    .address Address: {{account._id}}
-    a(ng-click="useAccount(account)" ng-href="/mycore") Switch to this Account
+    .address Address: {{account.name}} / {{account._id}}
     .sequence Sequence: {{account.pg.seqnum}}
-    .name
-      | Name:
-      input(ng-model="account.name")
-      button(ng-click="account.performTransaction({type:'options', homeDomain:account.name})") Broadcast to Core (Set as homedomain)
-    .seed
-      | Secret Seed:
-      input(ng-model="account.seed")
-      | (optional: you can store your secret seed on this server if you want your account to be federated. Only use this if your connection is secure.)
-      span(ng-hide="account.seedIsValid()") Invalid seed.
+    a(ng-click="useAccount(account)" ng-href="/mycore") Use this Account
 
 h4 Add Account
 
-input(ng-model="newAccount._id" placeholder="Address")
+input(ng-model="newAccount._id" placeholder="Existing Address")
+| 
+| or
+| 
+button(ng-click="generateRandom()") Generate a new random Address
 
 h5 Verify Address Ownership
-p EITHER provide the secret seed (only do this if you trust this website)
+p EITHER provide the secret seed 
 input(ng-model="newAccount.seed" placeholder="Secret Seed" ng-change="newAccount.selfSign()")
 span(ng-hide="newAccount.seedIsValid()") Seed is NOT valid!
 p OR sign the following text and copy the result into the 'signature' field.
 pre {{currentUser._id}}
 input(ng-model="newAccount.verification" placeholder="Signature")
-button(ng-hide="newAccount.isValid()" disabled) Add Account
-button(ng-show="newAccount.isValid()" ng-click="saveAccount(newAccount)") Add Account
-span(ng-hide="newAccount.isValid()") Signature is NOT valid!
+.actions
+  p(ng-if="newAccount.seed") WARNING: The owner of this website is not liable for the information you store on this server.
+  button(ng-hide="newAccount.isValid()" disabled) Add Account
+  button(ng-show="newAccount.isValid()" ng-click="saveAccount(newAccount)") Add Account
+  span(ng-hide="newAccount.isValid()") Signature is NOT valid!
+  

@@ -22,6 +22,7 @@ liveDb
     trustlines: Meteor.bindEnvironment (row, op) ->
       row.accountid = String(row.accountid)
       if op == 'INSERT' or op == 'UPDATE1'
+        Accounts.update({_id:row.issuer},{$addToSet: {assetcodes: row.assetcode}})
         Trustlines.upsert({accountid:row.accountid,assetcode:row.assetcode,issuer:row.issuer}, row)
       if op == 'DELETE'
         Trustlines.remove({accountid:row.accountid,assetcode:row.assetcode,issuer:row.issuer})
@@ -29,6 +30,7 @@ liveDb
   .on 'update', Meteor.bindEnvironment (diff, data) ->
     for row in data
       row.accountid = String(row.accountid)
+      Accounts.update({_id:row.issuer},{$addToSet: {assetcodes: row.assetcode}})
       Trustlines.upsert({accountid:row.accountid,assetcode:row.assetcode,issuer:row.issuer}, row)
 
 # Catch up on the recent 100 changes and set up sync
@@ -45,7 +47,7 @@ liveDb
     for row in data
       row.offerid = String(row.offerid)
       Offers.upsert({_id:row.offerid}, row)
-        
+
 # Catch up on the recent 100 changes and set up sync
 liveDb
   .select "SELECT * FROM txhistory ORDER BY ledgerseq DESC limit 100",

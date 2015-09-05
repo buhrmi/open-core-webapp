@@ -9,11 +9,12 @@ angular.module 'core', []
 .directive 'coreAddress', ->
   restrict: 'A'
   link: (scope, el, attrs) ->
-    address = scope.$eval(attrs.coreAddress)
-    account = Accounts.find address
-    el.attr 'href', "/account/#{address}"
-    el.attr 'title', address
-    el.html account?.name || (address.slice(0,7)+'...')
+    scope.$watch attrs.coreAddress, ->
+      address = scope.$eval(attrs.coreAddress)
+      account = Accounts.findOne address
+      el.attr 'href', "/accounts/#{address}"
+      el.attr 'title', address
+      el.html account?.name || (address.slice(0,7)+'...')
 
 .directive 'coreTrustline', ->
   templateUrl: 'templates/core/directiveTrustline.html'
@@ -21,6 +22,8 @@ angular.module 'core', []
   link: (scope, e, attrs) ->
     accountid = attrs.account || scope.currentAccount._id
     unless scope.trustline
-      scope.trustline = Trustlines.for accountid, 
-        scope.$eval(attrs.issuer), 
-        scope.$eval(attrs.assetcode)
+      scope.$meteorAutorun ->
+        scope.trustline = Trustlines.for accountid,
+          scope.$eval(attrs.issuer),
+          scope.$eval(attrs.assetcode)
+        scope.trustline.tlimit = 0 unless scope.trustline.tlimit

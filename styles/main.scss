@@ -101,10 +101,7 @@ $myCoreColor: #2e8965;
   border: 1px solid lighten($brandColor, 30);
   padding: 6px 14px;
   .issuer {
-    
-  }
-  .actions {
-    display: none;
+
   }
   .amount {
     font-size: 1.3em;
@@ -113,6 +110,6 @@ $myCoreColor: #2e8965;
   margin-bottom: 6px;
   &:hover {
     background-color: lighten($brandColor, 40);
-    cursor: pointer;
+    // cursor: pointer;
   }
 }

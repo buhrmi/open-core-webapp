@@ -20,8 +20,9 @@ angular.module 'opencore', ['angular-meteor', 'ngRoute', 'ngCookies', 'core']
   $rootScope.$meteorAutorun ->
     headers = stellarData.ledgerheaders.reactive()
     $rootScope.ledgerSeq = headers[0]?.ledgerseq
-  $rootScope.$meteorAutorun ->
-    $rootScope.currentAccount = Accounts.findOne(user_id: Meteor.userId())
+  # $rootScope.$meteorAutorun ->
+  #   $rootScope.currentAccount = Accounts.findOne(user_id: Meteor.userId())
+  $rootScope.currentAccount = $rootScope.$meteorObject(Accounts, user_id: Meteor.userId())
 
 .config ($locationProvider, $routeProvider) ->
   $locationProvider.html5Mode(true)
@@ -105,14 +106,19 @@ angular.module 'opencore', ['angular-meteor', 'ngRoute', 'ngCookies', 'core']
   $scope.saveAccount = (account) ->
     Meteor.call('createAccount', account)
   $scope.useAccount = (account) ->
-    $scope.$root.currentAccount = account
-  
+    $scope.$root.currentAccount = $scope.$root.$meteorObject Accounts, account._id
+  $scope.generateRandom = ->
+    kp = StellarBase.Keypair.random()
+    $scope.newAccount._id = kp.address()
+    $scope.newAccount.seed = kp.seed()
+    $scope.newAccount.selfSign()
+
 
 .controller 'MyCoreController', ($scope) ->
   $scope.resourceTitle = 'My Core'
   $scope.resourceTemplate = 'templates/mycore.html'
-  
-  $scope.$meteorAutorun ->    
+
+  $scope.$meteorAutorun ->
     acc = $scope.getReactively('currentAccount')
     if acc
       $scope.trustlines = Trustlines.find({accountid: acc._id}).fetch()
@@ -130,7 +136,7 @@ angular.module 'opencore', ['angular-meteor', 'ngRoute', 'ngCookies', 'core']
       $meteor.subscribe('transactions', addresses),
       $meteor.subscribe('accounts', addresses)
     ])
-  
+
 
 .controller 'AccountController', ($scope, $routeParams, dataService) ->
   $scope.resourceTitle = $routeParams.address

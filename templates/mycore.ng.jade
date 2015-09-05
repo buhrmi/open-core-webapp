@@ -34,7 +34,23 @@ button(ng-click="currentAccount.performTransaction(offerTx)") Send TX
   input(ng-model="paymentTx.amount" placeholder="Amount")
   button(ng-click="currentAccount.performTransaction(paymentTx)") Send TX
 
-
+.core_config
+  h4 Core Settings
+  | Home Domain / Acccount Name:
+  input(ng-model="currentAccount.name")
+  button(ng-click="currentAccount.performTransaction({type:'options', homeDomain:currentAccount.name})") Send TX
+  
+.settings
+  h4 Federation Settings
+  | Secret Seed (optional):
+  input(ng-model="currentAccount.seed")
+  span(ng-hide="currentAccount.seedIsValid()") Invalid seed.
+  
+  h5 Asset Codes
+  .assetcode(ng-repeat="assetcode in currentAccount.assetcodes")
+    {{assetcode}} <a ng-click="currentAccount.removeAssetCode(assetcode)">Remove</a>
+  input(ng-model="newAssetCode")
+  button(ng-click="currentAccount.addAssetCode(newAssetCode);newAssetCode=''") Add
 //- h3 Make signature
 //- p You can use area to create a signature.
 //- input(ng-model="object.data" placeholder="Text" ng-init="object.data=currentUser._id")

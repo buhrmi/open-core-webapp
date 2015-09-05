@@ -66,7 +66,7 @@ Accounts.helpers
         homeDomain: txParams.homeDomain
       .build()
 
-  performTransaction: (txParams) ->  
+  performTransaction: (txParams) ->
     stTransaction = @buildTransaction(txParams)
     @submitTransaction(stTransaction)
 
@@ -93,8 +93,8 @@ Accounts.helpers
 
   addAssetCode: (code) ->
     check(code, String)
-    return false unless code.length > 12
-    @update $push: {assetcodes: code}
+    return false if code.length > 12
+    @update $addToSet: {assetcodes: code}
 
   removeAssetCode: (code) ->
     @update $pull: {assetcodes: code}
