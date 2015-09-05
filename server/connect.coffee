@@ -5,8 +5,6 @@ Kadira.connect('Avas3b7wzNdXJjbL7', 'c9d95d49-4e5f-4301-a38e-3678d6e2cf53') unle
 
 liveDb = new LivePg(CORE_DB_URL, 'opencore');
 
-#TODO: subscribe to postgres user account to sync sequence
-
 # Catch up on the recent 10 changes and set up sync
 liveDb
   .select("SELECT * FROM accounts ORDER BY lastmodified DESC limit 10")
