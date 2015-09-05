@@ -73,5 +73,8 @@ Meteor.publish 'lastTransactions', ->
 Meteor.publish 'peers', ->
   liveDb.select('SELECT * FROM peers ORDER BY rank DESC')
 
+Meteor.publish 'featuredAssets', ->
+  liveDb.select('select distinct ON(issuer,assetcode) issuer,assetcode,balance  from trustlines order by issuer,assetcode,balance limit 10')
+
 # Meteor.publish 'offers', ->
 #   liveDb.select('SELECT * FROM offers ORDER BY offerid DESC')

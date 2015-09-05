@@ -178,4 +178,7 @@ angular.module 'opencore', ['angular-meteor', 'ngRoute', 'ngCookies', 'core']
     $scope.ledgerheaders = stellarData.ledgerheaders.reactive()
 
   $scope.$meteorAutorun ->
+    $scope.featuredAssets = stellarData.featuredAssets.reactive()
+
+  $scope.$meteorAutorun ->
     $scope.peers = stellarData.peers.reactive()

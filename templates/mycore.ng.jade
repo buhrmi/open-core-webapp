@@ -48,7 +48,7 @@ button(ng-click="currentAccount.performTransaction(offerTx)") Send TX
   
   h5 Asset Codes
   .assetcode(ng-repeat="assetcode in currentAccount.assetcodes")
-    {{assetcode}} <a ng-click="currentAccount.removeAssetCode(assetcode)">Remove</a>
+    | {{assetcode}} <a ng-click="currentAccount.removeAssetCode(assetcode)">Remove</a>
   input(ng-model="newAssetCode")
   button(ng-click="currentAccount.addAssetCode(newAssetCode);newAssetCode=''") Add
 //- h3 Make signature

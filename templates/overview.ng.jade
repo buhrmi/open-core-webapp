@@ -2,7 +2,16 @@ h3 Welcome to Open Core!
 
 p You can <a href="http://github.com/buhrmi/open-core"> fork me on GitHub</a> or <a href="http://gilt.jp">shop at GILT</a>!
 
-p You can be a part of the <a href="http://github.com/buhrmi/core">Global Core Consensus</a> by setting up your own core and join the network.
+p You can be part of the Global <a href="http://github.com/buhrmi/core">Core Consensus Network</a> by setting up your own core node.
+
+h3 You might be interested in these assets
+p Sign in and begin trading!
+
+.featured_assets
+  .asset(ng-repeat="asset in featuredAssets")
+    core-trustline(issuer="asset.issuer" assetcode="asset.assetcode")
+
+
 
 h3 Network Stats
 

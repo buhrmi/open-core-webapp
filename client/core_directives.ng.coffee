@@ -2,6 +2,7 @@ data =
   ledgerheaders: new PgSubscription 'lastLedgerHeaders'
   transactions: new PgSubscription 'lastTransactions'
   peers: new PgSubscription 'peers'
+  featuredAssets: new PgSubscription 'featuredAssets'
 
 angular.module 'core', []
 .factory 'stellarData', -> data
@@ -17,7 +18,7 @@ angular.module 'core', []
       el.html account?.name || (address.slice(0,7)+'...')
 
 .directive 'coreTrustline', ->
-  templateUrl: 'templates/core/directiveTrustline.html'
+  templateUrl: 'templates/core/directive.trustline.html'
   restrict: 'E'
   link: (scope, e, attrs) ->
     accountid = attrs.account || scope.currentAccount._id

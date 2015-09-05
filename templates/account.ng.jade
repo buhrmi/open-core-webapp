@@ -11,4 +11,4 @@ h4 Transactions
 .transactions
   .transaction(ng-repeat="tx in transactions")
     .operation(ng-repeat="op in tx.body.operations")
-      p {{op | displayOperation}}
+      p {{op}}
