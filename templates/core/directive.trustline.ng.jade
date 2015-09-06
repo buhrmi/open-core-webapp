@@ -16,7 +16,7 @@
       button.tx(ng-if="trustline.tlimit == 0" ng-click="trustline.manage({limit: 1})") Create Trust
   div(ng-if="currentAccount._id && currentAccount._id == trustline.issuer")
     .limit(ng-if="trustline.tlimit") Limit: {{trustline.tlimit}}
-    | Trustee: 
+    | Trusted by 
     a.account(core-address="trustline.accountid")
   div
     button(ng-hide="currentAccount._id") Sign in to Create Trust
