@@ -1,6 +1,5 @@
 angular.module 'core', []
 
-# TODO: extract this into CoreData
 .factory 'coreAddressService', ($q, $meteor) ->
   subscribeAddresses: (addresses) ->
     $q.all([
@@ -16,10 +15,12 @@ angular.module 'core', []
   link: (scope, el, attrs) ->
     scope.$watch attrs.coreAddress, ->
       address = scope.$eval(attrs.coreAddress)
-      account = Accounts.findOne address
-      el.attr 'href', "/accounts/#{address}"
-      el.attr 'title', address
-      el.html account?.name || (address.slice(0,7)+'...')
+      CoreData.subscribeAddresses [address], scope
+      scope.$meteorAutorun ->
+        account = Accounts.findOne address
+        el.attr 'href', "/accounts/#{address}"
+        el.attr 'title', address
+        el.html account?.name || (address.slice(0,7)+'...')
 
 .directive 'coreTrustline', ->
   templateUrl: 'templates/core/directive.trustline.html'

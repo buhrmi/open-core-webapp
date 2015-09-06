@@ -20,10 +20,11 @@ angular.module 'opencore', ['angular-meteor', 'ngRoute', 'ngCookies', 'core']
   $rootScope.$meteorAutorun ->
     headers = CoreData.ledgerheaders.reactive()
     $rootScope.ledgerSeq = headers[0]?.ledgerseq
-  # $rootScope.$meteorAutorun ->
-    # $rootScope.currentAccount = Accounts.findOne(user_id: Meteor.userId())
+
   $rootScope.$meteorAutorun ->
-    if Meteor.userId()
+    if Meteor.userId() && $rootScope.currentAccount?._id
+      $rootScope.currentAccount = $rootScope.$meteorObject(Accounts, _id: $rootScope.currentAccount._id)
+    else if Meteor.userId()
       $rootScope.currentAccount = $rootScope.$meteorObject(Accounts, user_id: Meteor.userId())
     else
       $rootScope.currentAccount = false
