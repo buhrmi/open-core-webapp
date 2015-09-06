@@ -1,4 +1,9 @@
-.trustline
+.trustline.transaction_source
+  .loading_overlay
+    .spinner
+      .double-bounce1
+      .double-bounce2
+    span Waiting...
   .amount
     | {{trustline.balance}}
     | 
@@ -8,7 +13,7 @@
     .limit(ng-if="trustline.tlimit") Limit: {{trustline.tlimit}}
     .limit(ng-if="trustline.tlimit == 0") Untrusted
     .actions
-      a(ng-if="trustline.tlimit" ng-click="trustline.manage({limit: '0'})") Cancel Trust
+      button(ng-if="trustline.tlimit" ng-click="trustline.manage({limit: '0'})") Cancel Trust
       button(ng-if="trustline.tlimit == 0" ng-click="trustline.manage({limit: 1})") Create Trust
   div(ng-if="currentAccount._id && currentAccount._id == trustline.issuer") Issued by you
   div(ng-hide="currentAccount._id") Sign in to Create Trust

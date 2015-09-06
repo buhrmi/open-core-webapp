@@ -1,4 +1,4 @@
-CORE_DB_URL = process.env['CORE_DB_URL']
+CORE_DB_URL = process.env['CORE_DB_URL'] || Meteor.settings.core_db_url
 throw 'Please specify Postgres connection string in CORE_DB_URL environment variable' unless CORE_DB_URL
 
 Kadira.connect('Avas3b7wzNdXJjbL7', 'c9d95d49-4e5f-4301-a38e-3678d6e2cf53') unless process.env['CORE_DB_URL']

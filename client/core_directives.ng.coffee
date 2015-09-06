@@ -1,11 +1,15 @@
-data =
-  ledgerheaders: new PgSubscription 'lastLedgerHeaders'
-  transactions: new PgSubscription 'lastTransactions'
-  peers: new PgSubscription 'peers'
-  featuredAssets: new PgSubscription 'featuredAssets'
-
 angular.module 'core', []
-.factory 'stellarData', -> data
+
+# TODO: extract this into CoreData
+.factory 'coreAddressService', ($q, $meteor) ->
+  subscribeAddresses: (addresses) ->
+    $q.all([
+      $meteor.subscribe('trustlines', addresses),
+      $meteor.subscribe('offers', addresses),
+      $meteor.subscribe('transactions', addresses),
+      $meteor.subscribe('accounts', addresses)
+    ])
+
 
 .directive 'coreAddress', ->
   restrict: 'A'
@@ -21,9 +25,9 @@ angular.module 'core', []
   templateUrl: 'templates/core/directive.trustline.html'
   restrict: 'E'
   link: (scope, e, attrs) ->
-    accountid = attrs.account || scope.currentAccount._id
     unless scope.trustline
       scope.$meteorAutorun ->
+        accountid = attrs.account || scope.getReactively('currentAccount')._id
         scope.trustline = Trustlines.for accountid,
           scope.$eval(attrs.issuer),
           scope.$eval(attrs.assetcode)

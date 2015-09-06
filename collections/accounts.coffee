@@ -72,13 +72,18 @@ Accounts.helpers
 
   submitTransaction: (stTransaction) ->
     keypair = StellarBase.Keypair.fromSeed(@seed)
+    # console.log(stTransaction)
     stTransaction.sign(keypair)
     blob = stTransaction.toEnvelope().toXDR().toString('base64')
-    result = $.getJSON(TX_ENDPOINT+encodeURIComponent(blob))
+    $.getJSON TX_ENDPOINT+encodeURIComponent(blob), (data) ->
+      CoreUI.transactionResponse(data, stTransaction)
+    CoreUI.transactionSent(stTransaction)
 
   transactionBuilder: ->
     stAccount = new StellarBase.Account(@_id, @pg?.seqnum || 0)
+    memo = CoreUtil.randomId(4)
     builder = new StellarBase.TransactionBuilder(stAccount)
+    # builder.memo = new StellarBase.Memo.text(memo)
     # builder.fee = 0
     builder
 

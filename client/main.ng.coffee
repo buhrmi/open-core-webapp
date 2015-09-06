@@ -15,10 +15,10 @@ _.each defaultSubscriptions, (subName) ->
 
 
 angular.module 'opencore', ['angular-meteor', 'ngRoute', 'ngCookies', 'core']
-.run ($meteor, $rootScope, stellarData) ->
+.run ($meteor, $rootScope) ->
   $rootScope.appName = 'OpenCore'
   $rootScope.$meteorAutorun ->
-    headers = stellarData.ledgerheaders.reactive()
+    headers = CoreData.ledgerheaders.reactive()
     $rootScope.ledgerSeq = headers[0]?.ledgerseq
   # $rootScope.$meteorAutorun ->
     # $rootScope.currentAccount = Accounts.findOne(user_id: Meteor.userId())
@@ -28,7 +28,8 @@ angular.module 'opencore', ['angular-meteor', 'ngRoute', 'ngCookies', 'core']
     else
       $rootScope.currentAccount = false
 
-.config ($locationProvider, $routeProvider) ->
+.config ($locationProvider, $routeProvider, $compileProvider) ->
+  $compileProvider.debugInfoEnabled(false)
   $locationProvider.html5Mode(true)
   $routeProvider.when '/',
     templateUrl: 'templates/layout.html'
@@ -132,21 +133,12 @@ angular.module 'opencore', ['angular-meteor', 'ngRoute', 'ngCookies', 'core']
     if acc
       $scope.offers = Offers.find({sellerid: acc._id}).fetch()
 
-.factory 'dataService', ($q, $meteor) ->
-  subscribeAddresses: (addresses) ->
-    $q.all([
-      $meteor.subscribe('trustlines', addresses),
-      $meteor.subscribe('offers', addresses),
-      $meteor.subscribe('transactions', addresses),
-      $meteor.subscribe('accounts', addresses)
-    ])
 
-
-.controller 'AccountController', ($scope, $routeParams, dataService) ->
+.controller 'AccountController', ($scope, $routeParams, coreAddressService) ->
   $scope.resourceTitle = $routeParams.address
   $scope.resourceTemplate = 'templates/account.html'
   address = $routeParams.address
-  dataService.subscribeAddresses([address])
+  coreAddressService.subscribeAddresses([address])
   .then ->
     $scope.$meteorAutorun ->
       $scope.account = account = Accounts.findOne(address)
@@ -165,12 +157,12 @@ angular.module 'opencore', ['angular-meteor', 'ngRoute', 'ngCookies', 'core']
     Accounts.find({}, {sort: {created_at: -1}})
 
 
-.controller 'OverviewController', ($scope, $routeParams, stellarData) ->
+.controller 'OverviewController', ($scope, $routeParams) ->
   $scope.resourceTitle = 'Overview'
   $scope.resourceTemplate = 'templates/overview.html'
 
   $scope.$meteorAutorun ->
-    pgTransactions = stellarData.transactions.reactive()
+    pgTransactions = CoreData.transactions.reactive()
     $scope.transactions = for pgTransaction in pgTransactions
       {
         body: new StellarBase.Transaction(pgTransaction.txbody)
@@ -179,10 +171,10 @@ angular.module 'opencore', ['angular-meteor', 'ngRoute', 'ngCookies', 'core']
       }
 
   $scope.$meteorAutorun ->
-    $scope.ledgerheaders = stellarData.ledgerheaders.reactive()
+    $scope.ledgerheaders = CoreData.ledgerheaders.reactive()
 
   $scope.$meteorAutorun ->
-    $scope.featuredAssets = stellarData.featuredAssets.reactive()
+    $scope.featuredAssets = CoreData.featuredAssets.reactive()
 
   $scope.$meteorAutorun ->
-    $scope.peers = stellarData.peers.reactive()
+    $scope.peers = CoreData.peers.reactive()
