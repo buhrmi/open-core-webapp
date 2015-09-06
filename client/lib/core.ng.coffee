@@ -15,9 +15,10 @@ angular.module 'core', []
   link: (scope, el, attrs) ->
     scope.$watch attrs.coreAddress, ->
       address = scope.$eval(attrs.coreAddress)
-      CoreData.subscribeAddresses [address], scope
+      scope.$meteorSubscribe('accounts', [address])
       scope.$meteorAutorun ->
         account = Accounts.findOne address
+        el.addClass 'core_address'
         el.attr 'href', "/accounts/#{address}"
         el.attr 'title', address
         el.html account?.name || (address.slice(0,7)+'...')
