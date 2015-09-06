@@ -2,6 +2,7 @@
 defaultSubscriptions = [
   'myAccounts',
   'myTrustlines',
+  'receivedTrustlines',
   'myOffers',
   'myTransactions'
 ]
@@ -22,10 +23,11 @@ angular.module 'opencore', ['angular-meteor', 'ngRoute', 'ngCookies', 'core']
     $rootScope.ledgerSeq = headers[0]?.ledgerseq
 
   $rootScope.$meteorAutorun ->
-    if Meteor.userId() && $rootScope.currentAccount?._id
-      $rootScope.currentAccount = $rootScope.$meteorObject(Accounts, _id: $rootScope.currentAccount._id)
-    else if Meteor.userId()
-      $rootScope.currentAccount = $rootScope.$meteorObject(Accounts, user_id: Meteor.userId())
+    if Meteor.userId()
+      if localStorage.getItem('currentAccountId')
+        $rootScope.currentAccount = $rootScope.$meteorObject(Accounts, _id: localStorage.getItem('currentAccountId'))
+      else
+        $rootScope.currentAccount = $rootScope.$meteorObject(Accounts, user_id: Meteor.userId())
     else
       $rootScope.currentAccount = false
 
@@ -69,38 +71,6 @@ angular.module 'opencore', ['angular-meteor', 'ngRoute', 'ngCookies', 'core']
 #       StellarBase.sign(data, secretKey).toString('hex')
 #     # StellarBase.sign(object.data, keypair.rawSeed())
 
-.filter 'dispayAddress', ->
-  (address) ->
-
-
-.filter 'formatAsset', ->
-  (asset) ->
-    if asset.isNative()
-      'NATIVE'
-    else
-      asset.code + '/' + asset.issuer
-
-.filter 'displayOperation', ($filter)->
-  (operation) ->
-    if operation.type == 'createAccount'
-      return "Destination: " + operation.destination + ", starting balance:" + operation.startingBalance
-    else if operation.type == 'manageOffer'
-      ops = "Creating offer, "
-      if operation.orderId != 0
-        if operation.amount == 0
-          ops = "Updating offer, "
-       else
-         ops = "Cancelling order, "
-      return ops + "amount: " + operation.amount +
-        ", price " + operation.price +
-        ", selling: " + $filter('formatAsset')(operation.selling) +
-        ", buying: " + $filter('formatAsset')(operation.buying)
-    else if operation.type == 'payment'
-      return "payment of " +  operation.amount + " " + $filter('formatAsset')(operation.asset) + " to " + operation.destination
-    else if operation.type == 'changeTrust'
-      return " limit set to  " + operation.limit + " for " + $filter('formatAsset')(operation.line)
-    else
-      return operation
 
 .controller 'MyCoreAccountsController', ($scope, $rootScope) ->
   $scope.resourceTitle = 'My Core > Accounts'
@@ -113,6 +83,7 @@ angular.module 'opencore', ['angular-meteor', 'ngRoute', 'ngCookies', 'core']
     Meteor.call('createAccount', account)
   $scope.useAccount = (account) ->
     $scope.$root.currentAccount = $scope.$root.$meteorObject Accounts, account._id
+    localStorage.setItem('currentAccountId', account._id)
   $scope.generateRandom = ->
     kp = StellarBase.Keypair.random()
     $scope.newAccount._id = kp.address()
@@ -128,6 +99,11 @@ angular.module 'opencore', ['angular-meteor', 'ngRoute', 'ngCookies', 'core']
     acc = $scope.getReactively('currentAccount')
     if acc
       $scope.trustlines = Trustlines.find({accountid: acc._id}).fetch()
+
+  $scope.$meteorAutorun ->
+    acc = $scope.getReactively('currentAccount')
+    if acc
+      $scope.receivedTrustlines = Trustlines.find({issuer: acc._id}, {sort: {balance: -1}}).fetch()
 
   $scope.$meteorAutorun ->
     acc = $scope.getReactively('currentAccount')

@@ -8,8 +8,7 @@ h3 You might be interested in these assets
 p Sign in and begin trading!
 
 .featured_assets
-  .asset(ng-repeat="asset in featuredAssets")
-    core-trustline(issuer="asset.issuer" assetcode="asset.assetcode")
+  core-trustline(issuer="asset.issuer" assetcode="asset.assetcode" ng-repeat="asset in featuredAssets")
 
 
 
@@ -43,9 +42,9 @@ table(class="table table-striped")
       td {{transaction.result.result().result().switch().name}}
       td {{transaction.pg.ledgerseq}}
       td 
-        a(ng-href="/accounts/{{transaction.body.source}}") {{transaction.body.source}}
+        a(core-address="transaction.body.source")
       td
-        p(ng-repeat="operation in transaction.body.operations") {{operation | displayOperation}}
+        p(ng-repeat="operation in transaction.body.operations") {{operation}}
 
 h4 Last 10 Ledger Headers
 div(ng-repeat="ledgerheader in ledgerheaders")

@@ -5,15 +5,18 @@
       .double-bounce2
     span Waiting...
   .amount
-    | {{trustline.balance}}
-    | 
+    span.balance {{trustline.balance}}&nbsp;
     span.code {{trustline.assetcode}}
-  a.issuer(core-address="trustline.issuer")
+    a.issuer(core-address="trustline.issuer")
   div(ng-if="currentAccount._id && currentAccount._id != trustline.issuer")
     .limit(ng-if="trustline.tlimit") Limit: {{trustline.tlimit}}
     .limit(ng-if="trustline.tlimit == 0") Untrusted
     .actions
-      button(ng-if="trustline.tlimit" ng-click="trustline.manage({limit: '0'})") Cancel Trust
-      button(ng-if="trustline.tlimit == 0" ng-click="trustline.manage({limit: 1})") Create Trust
-  div(ng-if="currentAccount._id && currentAccount._id == trustline.issuer") Issued by you
-  div(ng-hide="currentAccount._id") Sign in to Create Trust
+      button.tx(ng-if="trustline.tlimit" ng-click="trustline.manage({limit: '0'})") Cancel Trust
+      button.tx(ng-if="trustline.tlimit == 0" ng-click="trustline.manage({limit: 1})") Create Trust
+  div(ng-if="currentAccount._id && currentAccount._id == trustline.issuer")
+    .limit(ng-if="trustline.tlimit") Limit: {{trustline.tlimit}}
+    | Trustee: 
+    a.account(core-address="trustline.accountid")
+  div
+    button(ng-hide="currentAccount._id") Sign in to Create Trust
