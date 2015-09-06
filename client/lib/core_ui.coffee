@@ -3,7 +3,7 @@
   transactionSourceElement: null
 
   transactionSent: (tx) ->
-    txIdentifier = JSON.stringify tx.operations
+    txIdentifier = JSON.stringify(tx.operations)+tx.source
     # console.log('SENT IDENT:',txIdentifier)
     setTimeout (-> CoreUI.markLoading(txIdentifier)), 10
 
@@ -11,7 +11,7 @@
   transactionResponse: (response, tx) ->
     if response.status != 'PENDING'
       @transactionFailed(tx.source)
-    
+
 
   transactionFailed: (identifier) ->
     el = CoreUI.transactionSources[identifier]
@@ -38,7 +38,7 @@ Tracker.autorun ->
   result = StellarBase.xdr.TransactionResultPair.fromXDR(new Buffer(lastPgTransaction.txresult, 'base64'))
   success = result.result().result().switch().name == 'txSuccess'
   transaction = new StellarBase.Transaction(lastPgTransaction.txbody)
-  identifier = JSON.stringify(transaction.operations)
+  identifier = JSON.stringify(transaction.operations)+transaction.source
   if success
     CoreUI.transactionSuccess(identifier)
   else
