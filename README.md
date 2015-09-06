@@ -4,7 +4,7 @@ Welcome to the Core. Take the red pill, and venture forth.
 This is a web application that can be used to interact with the [Core](http://github.com/buhrmi/core). It can also serve as a frontend for the [Stellar Galaxy Network](http://www.stellar.org/galaxy).
 
 # See it running
-http://open-core.meteor.com (temporary URL, server donation accepted :P)
+http://open-core.org
 
 # Run it locally
 
@@ -19,6 +19,16 @@ http://open-core.meteor.com (temporary URL, server donation accepted :P)
     git clone https://github.com/buhrmi/open-core.git
     cd open-core
     CORE_DB_URL=postgres://[username]:[password]/[address-of-core-db]/[databasename] meteor
+
+# Deploy
+
+For easy deployments, [Meteor UP](https://github.com/arunoda/meteor-up) is used. So far, only Ubuntu 14.04 x64 has been tested. To deploy the app in production mode to your own server, follow these steps:
+
+* Install Meteor UP: `npm install -g mup`
+* Install your SSH public key on the server.
+* Rename the `mup.json.template` file to `mup.json` and configure it to match your server configuration.
+* Run `mup setup`. This will bootstrap your server for deployment. You only need to do this once.
+* Run `mup deploy` to deploy the app. Now you should be good to go.
 
 # I can't even...
 
