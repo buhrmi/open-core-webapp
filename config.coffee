@@ -1,1 +1,1 @@
-@TX_ENDPOINT = 'http://open-core.org/tx?blob='
+@TX_ENDPOINT = 'http://tx.open-core.org/tx?blob='
