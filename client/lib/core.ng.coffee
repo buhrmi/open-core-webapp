@@ -9,7 +9,6 @@ angular.module 'core', []
       $meteor.subscribe('accounts', addresses)
     ])
 
-
 .directive 'coreAddress', ->
   restrict: 'A'
   link: (scope, el, attrs) ->
@@ -22,6 +21,13 @@ angular.module 'core', []
         el.attr 'href', "/accounts/#{address}"
         el.attr 'title', address
         el.html account?.name || (address.slice(0,7)+'...')
+
+.directive 'coreTrustlinePicker', ->
+  templateUrl: 'templates/core/directive.trustline_picker.html'
+  restrict: 'E'
+  link: (scope, e, attrs) ->
+    scope.trustlines = scope.$eval(attrs.trustlines)
+    scope.selectedTrustline = scope.$eval(attrs.selectedTrustline)
 
 .directive 'coreTrustline', ->
   templateUrl: 'templates/core/directive.trustline.html'

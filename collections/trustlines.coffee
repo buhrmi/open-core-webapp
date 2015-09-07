@@ -29,6 +29,9 @@ Trustlines.helpers
   cancel: ->
     @manage limit: '0'
 
+  isEqual: (otherTrustline) ->
+    @assetcode == otherTrustline.assetcode && @accountid == otherTrustline.accountid && @issuer == otherTrustline.issuer
+
 Trustlines.for = (accountid, issuer, assetcode) ->
   params = {accountid: accountid, issuer: issuer, assetcode: assetcode}
   t = Trustlines.findOne(params) || Trustlines._transform(params)

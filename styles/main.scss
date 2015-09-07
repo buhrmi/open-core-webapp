@@ -128,8 +128,14 @@
   height: 100%;
   width: 100%;
   background-color: rgba(lighten($brandColor, 40), 0.9);
+  .message {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+  }
 }
-.loading .loading_overlay {
+.loading > .loading_overlay {
   display: block;
 }
 
@@ -164,5 +170,43 @@ button {
     font-family: FontAwesome;
     content: "\f1d8";
     margin-right: 6px;
+  }
+}
+
+.modalwrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(0,0,0,0.4);
+  .modalbox {
+    box-shadow: 5px 5px 20px rgba(0,0,0,0.3);
+    border-radius: 6px;
+    border: 1px solid $brandColor;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    background: white;
+    margin: 0 auto;
+    transform: translateX(-50%) translateY(-50%);
+    min-width: 400px;
+    .title {
+      padding: 6px 12px;
+      border-bottom: 1px solid $brandColor;
+    }
+    .body {
+      padding: 10px 12px;
+    }
+    .actions {
+      padding: 6px 12px;
+      border-top: 1px solid $brandColor;
+      text-align: right;
+    }
+    .trustline {
+      button.tx {
+        display: none;
+      }
+    }
   }
 }

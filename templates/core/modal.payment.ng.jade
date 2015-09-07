@@ -1,0 +1,19 @@
+.modalwrapper
+  .modalbox.payment.transaction_source
+    .loading_overlay
+      .message
+        .spinner
+          .double-bounce1
+          .double-bounce2
+        span Waiting...
+    .title Payment
+    .body
+      core-trustline-picker(trustlines="trustlines" ng-hide="trustline")
+      core-trustline(issuer="trustline.issuer" assetcode="trustline.assetcode")
+      div
+        input(ng-model="amount" placeholder="amount")
+        | (max: {{trustline.tlimit - trustline.balance}})
+    .actions
+      a(ng-click="close()") Cancel
+      span &nbsp;or&nbsp;
+      button.tx(ng-click="send()") Send Funds

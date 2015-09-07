@@ -1,0 +1,3 @@
+.trustline_picker
+  select(ng-model="selectedTrustline")
+    option(ng-repeat="trustline in trustlines" ng-bind="trustline" ng-selected="{{isEqual(trustline, selectedTrustline)}}")

@@ -10,7 +10,7 @@
   # Transaction response from the server. Before accepting to the network
   transactionResponse: (response, tx) ->
     if response.status != 'PENDING'
-      @transactionFailed(tx.source)
+      @transactionFailed(JSON.stringify(tx.operations)+tx.source)
 
 
   transactionFailed: (identifier) ->
@@ -27,7 +27,6 @@
     return unless CoreUI.transactionSourceElement?.length > 0
     CoreUI.transactionSources[identifier] = CoreUI.transactionSourceElement
     CoreUI.transactionSourceElement.addClass('loading')
-
 
 $(document).on 'click', (e) ->
   CoreUI.transactionSourceElement = $(e.target).parents('.transaction_source')

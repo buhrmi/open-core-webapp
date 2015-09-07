@@ -16,10 +16,10 @@ button.tx(ng-click="currentAccount.performTransaction(trustTx)") Manage Trust
   core-trustline(ng-repeat="trustline in receivedTrustlines")
 
 input(ng-model="paymentTx.destination" placeholder="Destination")
-input(ng-model="paymentTx.asset.issuer" placeholder="Issuer")
-input(ng-model="paymentTx.asset.code" placeholder="Code")
+input(ng-model="paymentTx.issuer" placeholder="Issuer")
+input(ng-model="paymentTx.assetcode" placeholder="Code")
 input(ng-model="paymentTx.amount" placeholder="Amount")
-button.tx(ng-click="currentAccount.performTransaction(paymentTx)") Send Credits
+button.tx(ng-click="currentAccount.performTransaction(paymentTx)") Send Funds
 
 
 .offers

@@ -53,10 +53,10 @@ Accounts.helpers
         price: txParams.price
       .build()
     else if txParams.type == 'payment'
-      asset = new StellarBase.Asset(txParams.asset.code, txParams.asset.issuer)
+      asset = new StellarBase.Asset(txParams.assetcode, txParams.issuer)
       @transactionBuilder()
       .addOperation StellarBase.Operation.payment
-        destination: txParams.destination
+        destination: txParams.destination || txParams.accountid
         asset: asset
         amount: txParams.amount
       .build()

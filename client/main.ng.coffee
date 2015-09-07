@@ -15,8 +15,8 @@ _.each defaultSubscriptions, (subName) ->
     subscriptionPromises[subName] = $meteor.subscribe(subName)
 
 
-angular.module 'opencore', ['angular-meteor', 'ngRoute', 'ngCookies', 'core']
-.run ($meteor, $rootScope) ->
+angular.module 'opencore', ['angular-meteor', 'ngRoute', 'ngCookies', 'core', 'angularModalService']
+.run ($meteor, $rootScope, ModalService) ->
   $rootScope.appName = 'OpenCore'
   $rootScope.$meteorAutorun ->
     headers = CoreData.ledgerheaders.reactive()
@@ -30,6 +30,28 @@ angular.module 'opencore', ['angular-meteor', 'ngRoute', 'ngCookies', 'core']
         $rootScope.currentAccount = $rootScope.$meteorObject(Accounts, {user_id: Meteor.userId()}, false)
     else
       $rootScope.currentAccount = false
+  
+  $rootScope.initiatePayment = (trustline) ->
+    ModalService.showModal
+      templateUrl: 'templates/core/modal.payment.html'
+      controller: 'ModalPaymentController'
+      inputs:
+        trustline:
+          accountid: trustline.accountid
+          issuer: trustline.issuer
+          assetcode: trustline.assetcode
+
+.controller 'ModalPaymentController', ($scope, trustline, close) ->
+  $scope.close = close
+  $scope.trustlines = $scope.$meteorCollection(( -> Trustlines.find(issuer: $scope.currentAccount._id)), false)
+    
+  $scope.trustline = $scope.$meteorObject(Trustlines, trustline, false)
+  $scope.send = ->
+    txParams = $scope.trustline
+    txParams.type = 'payment'
+    txParams.amount = $scope.amount
+    $scope.currentAccount.performTransaction(txParams)
+
 
 .config ($locationProvider, $routeProvider, $compileProvider) ->
   $compileProvider.debugInfoEnabled(false)
