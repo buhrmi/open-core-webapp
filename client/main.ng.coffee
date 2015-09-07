@@ -28,6 +28,7 @@ angular.module 'opencore', ['angular-meteor', 'ngRoute', 'ngCookies', 'core']
         $rootScope.currentAccount = $rootScope.$meteorObject(Accounts, {_id: localStorage.getItem('currentAccountId')}, false)
       else
         $rootScope.currentAccount = $rootScope.$meteorObject(Accounts, {user_id: Meteor.userId()}, false)
+        localStorage.setItem('currentAccountId', $rootScope.currentAccount?._id)
     else
       $rootScope.currentAccount = false
 
