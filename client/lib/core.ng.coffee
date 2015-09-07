@@ -15,7 +15,7 @@ angular.module 'core', []
   link: (scope, el, attrs) ->
     scope.$watch attrs.coreAddress, ->
       address = scope.$eval(attrs.coreAddress)
-      scope.$meteorSubscribe('accounts', [address])
+      scope.$meteorSubscribe('accounts', [address]) unless CoreData.alreadySubscribed('accounts', [address])
       scope.$meteorAutorun ->
         account = Accounts.findOne address
         el.addClass 'core_address'

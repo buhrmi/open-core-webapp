@@ -25,9 +25,9 @@ angular.module 'opencore', ['angular-meteor', 'ngRoute', 'ngCookies', 'core']
   $rootScope.$meteorAutorun ->
     if Meteor.userId()
       if localStorage.getItem('currentAccountId')
-        $rootScope.currentAccount = $rootScope.$meteorObject(Accounts, _id: localStorage.getItem('currentAccountId'))
+        $rootScope.currentAccount = $rootScope.$meteorObject(Accounts, {_id: localStorage.getItem('currentAccountId')}, false)
       else
-        $rootScope.currentAccount = $rootScope.$meteorObject(Accounts, user_id: Meteor.userId())
+        $rootScope.currentAccount = $rootScope.$meteorObject(Accounts, {user_id: Meteor.userId()}, false)
     else
       $rootScope.currentAccount = false
 
