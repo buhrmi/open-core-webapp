@@ -1,4 +1,26 @@
-angular.module 'core', []
+angular.module 'core', ['angularModalService']
+
+.run ($rootScope, ModalService) ->
+  $rootScope.initiatePayment = (trustline) ->
+    ModalService.showModal
+      templateUrl: 'templates/core/modal.payment.html'
+      controller: 'ModalPaymentController'
+      inputs:
+        trustline:
+          accountid: trustline.accountid
+          issuer: trustline.issuer
+          assetcode: trustline.assetcode
+
+.controller 'ModalPaymentController', ($scope, trustline, close) ->
+  $scope.close = close
+  $scope.trustlines = $scope.$meteorCollection(( -> Trustlines.find(issuer: $scope.currentAccount._id)), false)
+  $scope.trustline = $scope.$meteorObject(Trustlines, trustline, false)
+  $scope.send = ->
+    txParams = $scope.trustline
+    txParams.type = 'payment'
+    txParams.amount = $scope.amount
+    $scope.currentAccount.performTransaction(txParams)
+
 
 .factory 'coreAddressService', ($q, $meteor) ->
   subscribeAddresses: (addresses) ->
