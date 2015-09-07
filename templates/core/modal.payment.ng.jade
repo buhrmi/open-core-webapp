@@ -6,7 +6,7 @@
           .double-bounce1
           .double-bounce2
         span Waiting...
-    .title Payment
+    .title Payment to <span core-address="trustline.accountid"></span>
     .body
       core-trustline-picker(trustlines="trustlines" ng-hide="trustline")
       core-trustline(issuer="trustline.issuer" assetcode="trustline.assetcode")

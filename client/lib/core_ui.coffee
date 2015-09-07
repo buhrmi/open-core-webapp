@@ -17,11 +17,13 @@
     el = CoreUI.transactionSources[identifier]
     return unless el
     el.removeClass('loading')
+    el.find('.tx:visible').notify("Transaction Failed", className: "error", position: 'top center')
 
   transactionSuccess: (identifier) ->
     el = CoreUI.transactionSources[identifier]
     return unless el
     el.removeClass('loading')
+    el.find('.tx:visible').notify("Transaction Completed", className: "success", position: 'top center')
 
   markLoading: (identifier) ->
     return unless CoreUI.transactionSourceElement?.length > 0
