@@ -5,39 +5,38 @@ p {{currentAccount._id}}
   h4(ng-init="trustTx.type='manageTrust'") My Trustline Balances
   p This is what you own.
   core-trustline(ng-repeat="trustline in trustlines")
-input( ng-model="trustTx.asset.issuer" placeholder="Issuer")
-input(ng-model="trustTx.asset.code" placeholder="Code")
-input(ng-model="trustTx.limit" placeholder="Limit")
-button.tx(ng-click="currentAccount.performTransaction(trustTx)") Manage Trust
+
+button.tx(ng-click='initiateNewTrust()') New Trustline...
+//- input( ng-model="trustTx.asset.issuer" placeholder="Issuer")
+//- input(ng-model="trustTx.asset.code" placeholder="Code")
+//- input(ng-model="trustTx.limit" placeholder="Limit")
+//- button.tx(ng-click="currentAccount.performTransaction(trustTx)") Manage Trust
 
 .issued_funds
   h4(ng-init="paymentTx.type='payment'") Other's Trustline Balance
   p This is what you owe.
   core-trustline(ng-repeat="trustline in receivedTrustlines")
 
-input(ng-model="paymentTx.destination" placeholder="Destination")
-input(ng-model="paymentTx.issuer" placeholder="Issuer")
-input(ng-model="paymentTx.assetcode" placeholder="Code")
-input(ng-model="paymentTx.amount" placeholder="Amount")
-button.tx(ng-click="currentAccount.performTransaction(paymentTx)") Send Funds
+//- input(ng-model="paymentTx.destination" placeholder="Destination")
+//- input(ng-model="paymentTx.issuer" placeholder="Issuer")
+//- input(ng-model="paymentTx.assetcode" placeholder="Code")
+//- input(ng-model="paymentTx.amount" placeholder="Amount")
+//- button.tx(ng-click="currentAccount.performTransaction(paymentTx)") Send Funds
 
 
 .offers
   h4(ng-init="offerTx.type='manageOffer'") Your Offers
-  .offer.transaction_source(ng-repeat="offer in offers")
-    .want Want: {{offer.buyingissuer}}/{{offer.buyingassetcode}}
-    .have Have: {{offer.sellingissuer}}/{{offer.sellingassetcode}}
-    .amount Amount: {{offer.amount}}
-    .price Price: {{offer.price / 10000000}}
-    .remove
-       button.tx(ng-click="offer.manage({amount: '0'})") Cancel Offer
-input(ng-model="offerTx.want.issuer" placeholder="Want Address")
-input(ng-model="offerTx.want.code" placeholder="Want Code")
-input(ng-model="offerTx.have.issuer" placeholder="Have Address")
-input(ng-model="offerTx.have.code" placeholder="Have Code")
-input(ng-model="offerTx.amount" placeholder="Amount")
-input(ng-model="offerTx.price" placeholder="Price")
-button.tx(ng-click="currentAccount.performTransaction(offerTx)") Manage Offer
+  core-offer(ng-repeat="offer in offers")
+
+button.tx(ng-click="initiateNewOffer()") New Offer...
+
+//- input(ng-model="offerTx.want.issuer" placeholder="Want Address")
+//- input(ng-model="offerTx.want.code" placeholder="Want Code")
+//- input(ng-model="offerTx.have.issuer" placeholder="Have Address")
+//- input(ng-model="offerTx.have.code" placeholder="Have Code")
+//- input(ng-model="offerTx.amount" placeholder="Amount")
+//- input(ng-model="offerTx.price" placeholder="Price")
+//- button.tx(ng-click="currentAccount.performTransaction(offerTx)") Manage Offer
 
 .core_config
   h4 Core Settings

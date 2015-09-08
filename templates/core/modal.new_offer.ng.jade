@@ -1,0 +1,28 @@
+.modalwrapper
+  .modalbox.modal_new_offer.transaction_source
+    .loading_overlay
+      .message
+        .spinner
+          .double-bounce1
+          .double-bounce2
+        span Waiting...
+    .title New Offer
+    .body
+      div(ng-show="selling_trustlines.length > 0")
+        span Sell:
+        core-trustline-picker(trustlines="selling_trustlines" model="selling_trustline")
+      div(ng-hide="selling_trustlines.length > 0")
+        span You don't have any assets to sell. Please specify your assets before making an offer.
+      div(ng-show="buying_trustlines.length > 0")
+        span Buy:
+        core-trustline-picker(trustlines="buying_trustlines" model="buying_trustline")
+      div(ng-hide="buying_trustlines.length > 0")
+        span You don't have any trustlines. Before you can accept an asset, you have to create trust.
+      span Amount to sell:
+      input(ng-model="amount" placeholder="Amount")
+      span Price:
+      input(ng-model="price" placeholder="Price ({{buying_trustline.assetcode}} per {{selling_trustline.assetcode}})")
+    .actions
+      a(ng-click="close()") Cancel
+      span &nbsp;or&nbsp;
+      button.tx(ng-click="create()") Create Offer

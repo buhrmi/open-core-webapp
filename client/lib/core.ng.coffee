@@ -21,10 +21,27 @@ angular.module 'core', ['angularModalService']
           issuer: trustline.issuer
           assetcode: trustline.assetcode
 
+  $rootScope.initiateNewOffer = ->
+    ModalService.showModal
+      templateUrl: 'templates/core/modal.new_offer.html'
+      controller: 'ModalNewOfferController'
+
+.controller 'ModalNewOfferController', ($scope, close) ->
+  $scope.close = close
+  $scope.$meteorAutorun ->
+    available_selling_trustlines = Trustlines.find(accountid: $scope.currentAccount._id, balance: {$gt: 0}).fetch()
+    if $scope.currentAccount.assetcodes
+      for assetcode in $scope.currentAccount.assetcodes
+        available_selling_trustlines.push({assetcode: assetcode, issuer: $scope.currentAccount._id})
+    $scope.selling_trustlines = available_selling_trustlines
+    $scope.buying_trustlines = Trustlines.find(accountid: $scope.currentAccount._id).fetch()
+
+
 .controller 'ModalPaymentController', ($scope, trustline, close) ->
   $scope.close = close
-  $scope.trustlines = $scope.$meteorCollection(( -> Trustlines.find(issuer: $scope.currentAccount._id)), false)
-  $scope.trustline = $scope.$meteorObject(Trustlines, trustline, false)
+  # $scope.trustlines = $scope.$meteorCollection(( -> Trustlines.find(issuer: $scope.currentAccount._id)), false)
+  $scope.$meteorAutorun ->
+    $scope.trustline = Trustlines.findOne(trustline)
   $scope.send = ->
     txParams = $scope.trustline
     txParams.type = 'payment'
@@ -33,7 +50,8 @@ angular.module 'core', ['angularModalService']
 
 .controller 'ModalTrustlineController', ($scope, trustline, close) ->
   $scope.close = close
-  $scope.trustline = $scope.$meteorObject(Trustlines, trustline, false)
+  $scope.$meteorAutorun ->
+    $scope.trustline = Trustlines.findOne(trustline)
   $scope.newLimit = $scope.trustline.tlimit
 
 .factory 'coreAddressService', ($q, $meteor) ->
@@ -45,8 +63,10 @@ angular.module 'core', ['angularModalService']
       $meteor.subscribe('accounts', addresses)
     ])
 
-.directive 'coreAddress', ->
+
+.directive 'coreAddress', ($filter) ->
   restrict: 'A'
+  scope: true
   link: (scope, el, attrs) ->
     scope.$watch attrs.coreAddress, ->
       address = scope.$eval(attrs.coreAddress)
@@ -61,13 +81,25 @@ angular.module 'core', ['angularModalService']
 .directive 'coreTrustlinePicker', ->
   templateUrl: 'templates/core/directive.trustline_picker.html'
   restrict: 'E'
+  scope: true
   link: (scope, e, attrs) ->
     scope.trustlines = scope.$eval(attrs.trustlines)
+    scope.$watch 'selectedTrustline', ->
+      scope.$parent[attrs.model] = scope.selectedTrustline
+    scope.$parent.$watch attrs.model, ->
+      scope.selectedTrustline = scope.$parent[attrs.model]
     scope.selectedTrustline = scope.$eval(attrs.selectedTrustline)
+
+.directive 'coreOffer', ->
+  templateUrl: 'templates/core/directive.offer.html'
+  restrict: 'E'
+  link: (scope, e, attrs) ->
+    scope.offer = scope.$eval(attrs.offer)
 
 .directive 'coreTrustline', ->
   templateUrl: 'templates/core/directive.trustline.html'
   restrict: 'E'
+  scope: true
   link: (scope, e, attrs) ->
     unless scope.trustline
       scope.$meteorAutorun ->

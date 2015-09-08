@@ -1,3 +1,6 @@
-.trustline_picker
-  select(ng-model="selectedTrustline")
-    option(ng-repeat="trustline in trustlines" ng-bind="trustline" ng-selected="{{isEqual(trustline, selectedTrustline)}}")
+.selectable_trustline(ng-class="{selected: trustline==$parent.selectedTrustline}" ng-repeat="trustline in trustlines" ng-click="$parent.selectedTrustline=trustline")
+  span.assetcode {{trustline.assetcode}}
+  span.issuer(core-address="trustline.issuer")
+  span.owned(ng-show="trustline.balance > 0") ({{trustline.balance}} owned)
+  span.owned(ng-hide="trustline.balance > 0") (unlimited owned)
+//- span Selected: {{selectedTrustline}}

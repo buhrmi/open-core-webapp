@@ -1,0 +1,24 @@
+.offer
+  .loading_overlay
+    .spinner
+      .double-bounce1
+      .double-bounce2
+    span Waiting...
+  .selling
+    span Selling
+    span.amount {{offer.amount}}&nbsp;
+    span.code {{offer.sellingassetcode}}
+    a.sellingissuer(core-address="offer.sellingissuer")
+  .buying
+    span Buying
+    span.code {{offer.buyingassetcode}}
+    a.buyingissuer(core-address="offer.buyingissuer")
+  .price Price: {{offer.price / 10000000}}
+  div(ng-if="currentAccount._id == offer.sellerid")
+    .actions
+      button.tx(ng-click="offer.manage({amount: '0'})") Cancel Offer
+      button.options(ng-click="initiateManageOffer(offer)")
+  div(ng-if="currentAccount._id == offer.buyingid")
+    button.tx(ng-click="initiateAcceptOffer(offer)") Accept Offer...
+  div
+    button(ng-hide="currentAccount._id") Sign in to Trade
