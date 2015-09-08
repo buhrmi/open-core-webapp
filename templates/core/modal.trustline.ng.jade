@@ -1,0 +1,18 @@
+.modalwrapper
+  .modalbox.modal_trustline.transaction_source
+    .loading_overlay
+      .message
+        .spinner
+          .double-bounce1
+          .double-bounce2
+        span Waiting...
+    .title {{trustline.assetcode}} <span core-address="trustline.issuer"></span>
+    .body
+      core-trustline(issuer="trustline.issuer" assetcode="trustline.assetcode")
+      div
+        input(ng-model="newLimit" placeholder="Limit")
+        span(ng-hide="trustline.tlimit > 0") (Please enter a limit &gt; 0)
+    .actions
+      a(ng-click="close()") Cancel
+      span &nbsp;or&nbsp;
+      button.tx(ng-click="trustline.manage({limit: newLimit})") Change to {{newLimit}}

@@ -171,6 +171,10 @@ button {
     content: "\f1d8";
     margin-right: 6px;
   }
+  &.options:before {
+    font-family: FontAwesome;
+    content: "\f013";
+  }
 }
 
 .modalwrapper {
@@ -191,20 +195,20 @@ button {
     margin: 0 auto;
     transform: translateX(-50%) translateY(-50%);
     min-width: 400px;
-    .title {
+    > .title {
       padding: 6px 12px;
       border-bottom: 1px solid $brandColor;
     }
-    .body {
+    > .body {
       padding: 10px 12px;
     }
-    .actions {
+    > .actions {
       padding: 6px 12px;
       border-top: 1px solid $brandColor;
       text-align: right;
     }
     .trustline {
-      button.tx {
+      button.tx, button.options {
         display: none;
       }
     }

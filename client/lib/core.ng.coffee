@@ -11,6 +11,16 @@ angular.module 'core', ['angularModalService']
           issuer: trustline.issuer
           assetcode: trustline.assetcode
 
+  $rootScope.initiateChangeTrust = (trustline) ->
+    ModalService.showModal
+      templateUrl: 'templates/core/modal.trustline.html'
+      controller: 'ModalTrustlineController'
+      inputs:
+        trustline:
+          accountid: trustline.accountid
+          issuer: trustline.issuer
+          assetcode: trustline.assetcode
+
 .controller 'ModalPaymentController', ($scope, trustline, close) ->
   $scope.close = close
   $scope.trustlines = $scope.$meteorCollection(( -> Trustlines.find(issuer: $scope.currentAccount._id)), false)
@@ -21,6 +31,10 @@ angular.module 'core', ['angularModalService']
     txParams.amount = $scope.amount
     $scope.currentAccount.performTransaction(txParams)
 
+.controller 'ModalTrustlineController', ($scope, trustline, close) ->
+  $scope.close = close
+  $scope.trustline = $scope.$meteorObject(Trustlines, trustline, false)
+  $scope.newLimit = $scope.trustline.tlimit
 
 .factory 'coreAddressService', ($q, $meteor) ->
   subscribeAddresses: (addresses) ->
