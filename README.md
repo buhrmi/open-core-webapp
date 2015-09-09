@@ -34,4 +34,4 @@ If you have questions about any of this, join us in the Stellar developer chat o
 
 # License
 
-Really?
+Yup.
