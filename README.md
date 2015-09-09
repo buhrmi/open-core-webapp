@@ -1,4 +1,4 @@
-# open-core
+# open-core/webapp
 A web application to interact with the [Core](http://github.com/buhrmi/core)/[Stellar](http://www.stellar.org/galaxy) Consensus Network.
 
 # See it running
