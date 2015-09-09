@@ -28,13 +28,27 @@ angular.module 'core', ['angularModalService']
 
 .controller 'ModalNewOfferController', ($scope, close) ->
   $scope.close = close
-  $scope.$meteorAutorun ->
-    available_selling_trustlines = Trustlines.find(accountid: $scope.currentAccount._id, balance: {$gt: 0}).fetch()
-    if $scope.currentAccount.assetcodes
-      for assetcode in $scope.currentAccount.assetcodes
-        available_selling_trustlines.push({assetcode: assetcode, issuer: $scope.currentAccount._id})
-    $scope.selling_trustlines = available_selling_trustlines
-    $scope.buying_trustlines = Trustlines.find(accountid: $scope.currentAccount._id).fetch()
+  # $scope.$meteorAutorun ->
+  available_selling_trustlines = Trustlines.find(accountid: $scope.currentAccount._id, $or: [{balance: {$gt: '0'}},{balance: {$gt: 0}}]).fetch()
+  if $scope.currentAccount.assetcodes
+    for assetcode in $scope.currentAccount.assetcodes
+      available_selling_trustlines.push({assetcode: assetcode, issuer: $scope.currentAccount._id})
+  $scope.selling_trustlines = available_selling_trustlines
+  $scope.buying_trustlines = Trustlines.find(accountid: $scope.currentAccount._id).fetch()
+  $scope.create = ->
+    
+    want = new StellarBase.Asset($scope.buying_trustline.assetcode, $scope.buying_trustline.issuer)
+    have = new StellarBase.Asset($scope.selling_trustline.assetcode, $scope.selling_trustline.issuer)
+    tb = $scope.currentAccount.transactionBuilder()
+    return console.log('Invalid amount or price') unless $scope.amount && $scope.price
+    op = StellarBase.Operation.manageOffer
+      selling: have
+      buying: want
+      amount: $scope.amount * 10000000
+      price: $scope.price * 10000000
+    tx = tb.addOperation(op).build()
+    $scope.currentAccount.submitTransaction(tx)
+
 
 
 .controller 'ModalPaymentController', ($scope, trustline, close) ->
@@ -45,14 +59,14 @@ angular.module 'core', ['angularModalService']
   $scope.send = ->
     txParams = $scope.trustline
     txParams.type = 'payment'
-    txParams.amount = $scope.amount
+    txParams.amount = $scope.amount * 10000000
     $scope.currentAccount.performTransaction(txParams)
 
 .controller 'ModalTrustlineController', ($scope, trustline, close) ->
   $scope.close = close
   $scope.$meteorAutorun ->
     $scope.trustline = Trustlines.findOne(trustline)
-  $scope.newLimit = $scope.trustline.tlimit
+  $scope.newLimit = $scope.trustline.tlimit / 10000000
 
 .factory 'coreAddressService', ($q, $meteor) ->
   subscribeAddresses: (addresses) ->
@@ -94,12 +108,12 @@ angular.module 'core', ['angularModalService']
   templateUrl: 'templates/core/directive.offer.html'
   restrict: 'E'
   link: (scope, e, attrs) ->
-    scope.offer = scope.$eval(attrs.offer)
+    true 
 
 .directive 'coreTrustline', ->
   templateUrl: 'templates/core/directive.trustline.html'
   restrict: 'E'
-  scope: true
+  # scope: true
   link: (scope, e, attrs) ->
     unless scope.trustline
       scope.$meteorAutorun ->

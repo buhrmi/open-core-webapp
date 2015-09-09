@@ -5,18 +5,18 @@
       .double-bounce2
     span Waiting...
   .amount
-    span.balance {{trustline.balance}}&nbsp;
+    span.balance(ng-if="trustline.balance") {{trustline.balance / 10000000}}&nbsp;
     span.code {{trustline.assetcode}}
     a.issuer(core-address="trustline.issuer")
   div(ng-if="currentAccount._id && currentAccount._id != trustline.issuer")
-    .limit(ng-if="trustline.tlimit") Limit: {{trustline.tlimit}}
+    .limit(ng-if="trustline.tlimit") Limit: {{trustline.tlimit / 10000000}}
     .limit(ng-if="trustline.tlimit == 0") Untrusted
     .actions
       button.tx(ng-if="trustline.tlimit" ng-click="trustline.manage({limit: trustline.balance})") Cancel Trust
       button.options(ng-if="trustline.tlimit" ng-click="initiateChangeTrust(trustline)")
       button.tx(ng-if="trustline.tlimit == 0" ng-click="initiateChangeTrust(trustline)") Create Trust...
   div(ng-if="currentAccount._id && currentAccount._id == trustline.issuer")
-    .limit(ng-if="trustline.tlimit") Limit: {{trustline.tlimit}}
+    .limit(ng-if="trustline.tlimit") Limit: {{trustline.tlimit / 10000000}}
     div(ng-if="currentAccount._id != trustline.accountid")
       | Trusted by 
       a.account(core-address="trustline.accountid")

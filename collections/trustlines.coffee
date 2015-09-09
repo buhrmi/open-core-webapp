@@ -22,7 +22,7 @@ Trustlines.helpers
     txBuilder = account.transactionBuilder()
     op = StellarBase.Operation.changeTrust
       asset: asset
-      limit: String(opts.tlimit || opts.limit || @tlimit || 1)
+      limit: String(opts.tlimit || opts.limit || @tlimit || 10000000)
     tx = txBuilder.addOperation(op).build()
     account.submitTransaction(tx)
 

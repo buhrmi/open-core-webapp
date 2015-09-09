@@ -1,4 +1,5 @@
 # TODO: extract subscription building process into angular provider or something...
+# TODO: update subscriptions when adding or removing account
 defaultSubscriptions = [
   'myAccounts',
   'myTrustlines',
@@ -82,7 +83,8 @@ angular.module 'opencore', ['angular-meteor', 'ngRoute', 'ngCookies', 'core']
   $scope.userAccounts = $scope.$meteorCollection -> Meteor.user().getAccounts()
 
   $scope.saveAccount = (account) ->
-    Meteor.call('createAccount', account)
+    Meteor.call 'createAccount', account, ->
+      window.location.pathname = '/mycore'
   $scope.useAccount = (account) ->
     $scope.$root.currentAccount = $scope.$root.$meteorObject Accounts, account._id
     localStorage.setItem('currentAccountId', account._id)
