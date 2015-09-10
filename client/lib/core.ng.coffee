@@ -41,12 +41,12 @@ angular.module 'core', ['angularModalService']
 .controller 'ModalNewOfferController', ($scope, close) ->
   $scope.close = close
   # $scope.$meteorAutorun ->
-  available_selling_trustlines = Trustlines.find(accountid: $scope.currentAccount._id, $or: [{balance: {$gt: '0'}},{balance: {$gt: 0}}]).fetch()
+  available_selling_trustlines = Trustlines.find($or: [{balance: {$gt: '0'}},{balance: {$gt: 0}}]).fetch()
   if $scope.currentAccount.assetcodes
     for assetcode in $scope.currentAccount.assetcodes
       available_selling_trustlines.push({assetcode: assetcode, issuer: $scope.currentAccount._id})
   $scope.selling_trustlines = available_selling_trustlines
-  $scope.buying_trustlines = Trustlines.find(accountid: $scope.currentAccount._id).fetch()
+  $scope.buying_trustlines = Trustlines.find($or: [{accountid: $scope.currentAccount._id},{issuer: $scope.currentAccount._id}]).fetch()
   $scope.create = ->
     want = new StellarBase.Asset($scope.buying_trustline.assetcode, $scope.buying_trustline.issuer)
     have = new StellarBase.Asset($scope.selling_trustline.assetcode, $scope.selling_trustline.issuer)
@@ -134,7 +134,7 @@ angular.module 'core', ['angularModalService']
   templateUrl: 'templates/core/directive.offer.html'
   restrict: 'E'
   link: (scope, e, attrs) ->
-    true 
+    true
 
 .directive 'coreTrustline', ->
   templateUrl: 'templates/core/directive.trustline.html'
