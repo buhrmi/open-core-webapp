@@ -2633,11 +2633,16 @@ window.StellarBase =
 	exports.UnsignedHyper = _jsXdr.UnsignedHyper;
 	exports.Hyper = _jsXdr.Hyper;
 	exports.Transaction = __webpack_require__(85).Transaction;
-	exports.TransactionBuilder = __webpack_require__(89).TransactionBuilder;
+	exports.TransactionBuilder = __webpack_require__(90).TransactionBuilder;
 	exports.Asset = __webpack_require__(87).Asset;
 	exports.Operation = __webpack_require__(86).Operation;
-	exports.Memo = __webpack_require__(91).Memo;
-	exports.Account = __webpack_require__(90).Account;
+	exports.Memo = __webpack_require__(92).Memo;
+	exports.Account = __webpack_require__(91).Account;
+
+	var _network = __webpack_require__(89);
+
+	exports.Network = _network.Network;
+	exports.Networks = _network.Networks;
 
 	_defaults(exports, _interopRequireWildcard(__webpack_require__(71)));
 
@@ -2649,7 +2654,7 @@ window.StellarBase =
 
 	var _interopRequireWildcard = function (obj) { return obj && obj.__esModule ? obj : { "default": obj }; };
 
-	// Automatically generated on 2015-07-27T16:14:51+02:00
+	// Automatically generated on 2015-09-01T12:50:28+02:00
 	// DO NOT EDIT or your changes may be overwritten
 
 	/* jshint maxstatements:2147483647  */
@@ -3056,7 +3061,7 @@ window.StellarBase =
 	  //       SequenceNumber seqNum;    // last sequence number used for this account
 	  //       uint32 numSubEntries;     // number of sub-entries this account has
 	  //                                 // drives the reserve
-	  //       AccountID* inflationDest; // Account to vote during inflation
+	  //       AccountID* inflationDest; // Account to vote for during inflation
 	  //       uint32 flags;             // see AccountFlags
 	  //
 	  //       string32 homeDomain; // can be used for reverse federation and memo lookup
@@ -3111,7 +3116,7 @@ window.StellarBase =
 	  //   struct TrustLineEntry
 	  //   {
 	  //       AccountID accountID; // account this trustline belongs to
-	  //       Asset asset;   // type of asset (with issuer)
+	  //       Asset asset;         // type of asset (with issuer)
 	  //       int64 balance;       // how much of this asset the user has.
 	  //                            // Asset defines the unit for this;
 	  //
@@ -3164,8 +3169,8 @@ window.StellarBase =
 	  //       AccountID sellerID;
 	  //       uint64 offerID;
 	  //       Asset selling; // A
-	  //       Asset buying; // B
-	  //       int64 amount;       // amount of A
+	  //       Asset buying;  // B
+	  //       int64 amount;  // amount of A
 	  //
 	  //       /* price for this offer:
 	  //           price of A in terms of B
@@ -3189,18 +3194,18 @@ window.StellarBase =
 
 	  // === xdr source ============================================================
 	  //
-	  //   union LedgerEntry switch (LedgerEntryType type)
-	  //   {
-	  //   case ACCOUNT:
-	  //       AccountEntry account;
-	  //   case TRUSTLINE:
-	  //       TrustLineEntry trustLine;
-	  //   case OFFER:
-	  //       OfferEntry offer;
-	  //   };
+	  //   union switch (LedgerEntryType type)
+	  //       {
+	  //       case ACCOUNT:
+	  //           AccountEntry account;
+	  //       case TRUSTLINE:
+	  //           TrustLineEntry trustLine;
+	  //       case OFFER:
+	  //           OfferEntry offer;
+	  //       }
 	  //
 	  // ===========================================================================
-	  xdr.union("LedgerEntry", {
+	  xdr.union("LedgerEntryData", {
 	    switchOn: xdr.lookup("LedgerEntryType"),
 	    switchName: "type",
 	    switches: [["account", "account"], ["trustline", "trustLine"], ["offer", "offer"]],
@@ -3208,6 +3213,50 @@ window.StellarBase =
 	      account: xdr.lookup("AccountEntry"),
 	      trustLine: xdr.lookup("TrustLineEntry"),
 	      offer: xdr.lookup("OfferEntry") } });
+
+	  // === xdr source ============================================================
+	  //
+	  //   union switch (int v)
+	  //       {
+	  //       case 0:
+	  //           void;
+	  //       }
+	  //
+	  // ===========================================================================
+	  xdr.union("LedgerEntryExt", {
+	    switchOn: xdr.int(),
+	    switchName: "v",
+	    switches: [[0, xdr["void"]()]],
+	    arms: {} });
+
+	  // === xdr source ============================================================
+	  //
+	  //   struct LedgerEntry
+	  //   {
+	  //       uint32 lastModifiedLedgerSeq; // ledger the LedgerEntry was last changed
+	  //
+	  //       union switch (LedgerEntryType type)
+	  //       {
+	  //       case ACCOUNT:
+	  //           AccountEntry account;
+	  //       case TRUSTLINE:
+	  //           TrustLineEntry trustLine;
+	  //       case OFFER:
+	  //           OfferEntry offer;
+	  //       }
+	  //       data;
+	  //
+	  //       // reserved for future use
+	  //       union switch (int v)
+	  //       {
+	  //       case 0:
+	  //           void;
+	  //       }
+	  //       ext;
+	  //   };
+	  //
+	  // ===========================================================================
+	  xdr.struct("LedgerEntry", [["lastModifiedLedgerSeq", xdr.lookup("Uint32")], ["data", xdr.lookup("LedgerEntryData")], ["ext", xdr.lookup("LedgerEntryExt")]]);
 
 	  // === xdr source ============================================================
 	  //
@@ -3871,7 +3920,7 @@ window.StellarBase =
 	  //   struct PaymentOp
 	  //   {
 	  //       AccountID destination; // recipient of the payment
-	  //       Asset asset;     // what they end up with
+	  //       Asset asset;           // what they end up with
 	  //       int64 amount;          // amount they end up with
 	  //   };
 	  //
@@ -3883,12 +3932,12 @@ window.StellarBase =
 	  //   struct PathPaymentOp
 	  //   {
 	  //       Asset sendAsset; // asset we pay with
-	  //       int64 sendMax;         // the maximum amount of sendAsset to
-	  //                              // send (excluding fees).
-	  //                              // The operation will fail if can't be met
+	  //       int64 sendMax;   // the maximum amount of sendAsset to
+	  //                        // send (excluding fees).
+	  //                        // The operation will fail if can't be met
 	  //
 	  //       AccountID destination; // recipient of the payment
-	  //       Asset destAsset; // what they end up with
+	  //       Asset destAsset;       // what they end up with
 	  //       int64 destAmount;      // amount they end up with
 	  //
 	  //       Asset path<5>; // additional hops it must go through to get there
@@ -3917,10 +3966,10 @@ window.StellarBase =
 	  //
 	  //   struct CreatePassiveOfferOp
 	  //   {
-	  //       Asset selling;  // A
-	  //       Asset buying;   // B
-	  //       int64 amount;   // amount taker gets. if set to 0, delete the offer
-	  //       Price price;    // cost of A in terms of B
+	  //       Asset selling; // A
+	  //       Asset buying;  // B
+	  //       int64 amount;  // amount taker gets. if set to 0, delete the offer
+	  //       Price price;   // cost of A in terms of B
 	  //   };
 	  //
 	  // ===========================================================================
@@ -3972,7 +4021,7 @@ window.StellarBase =
 	  //       case ASSET_TYPE_CREDIT_ALPHANUM4:
 	  //           opaque assetCode4[4];
 	  //
-	  //   	case ASSET_TYPE_CREDIT_ALPHANUM12:
+	  //       case ASSET_TYPE_CREDIT_ALPHANUM12:
 	  //           opaque assetCode12[12];
 	  //
 	  //           // add other asset types here in the future
@@ -3998,7 +4047,7 @@ window.StellarBase =
 	  //       case ASSET_TYPE_CREDIT_ALPHANUM4:
 	  //           opaque assetCode4[4];
 	  //
-	  //   	case ASSET_TYPE_CREDIT_ALPHANUM12:
+	  //       case ASSET_TYPE_CREDIT_ALPHANUM12:
 	  //           opaque assetCode12[12];
 	  //
 	  //           // add other asset types here in the future
@@ -4211,20 +4260,20 @@ window.StellarBase =
 	  //   struct ClaimOfferAtom
 	  //   {
 	  //       // emited to identify the offer
-	  //       AccountID offerOwner; // Account that owns the offer
+	  //       AccountID sellerID; // Account that owns the offer
 	  //       uint64 offerID;
 	  //
 	  //       // amount and asset taken from the owner
-	  //       Asset assetClaimed;
-	  //       int64 amountClaimed;
+	  //       Asset assetSold;
+	  //       int64 amountSold;
 	  //
-	  //       // amount and assetsent to the owner
-	  //       Asset assetSend;
-	  //       int64 amountSend;
+	  //       // amount and asset sent to the owner
+	  //       Asset assetBought;
+	  //       int64 amountBought;
 	  //   };
 	  //
 	  // ===========================================================================
-	  xdr.struct("ClaimOfferAtom", [["offerOwner", xdr.lookup("AccountId")], ["offerId", xdr.lookup("Uint64")], ["assetClaimed", xdr.lookup("Asset")], ["amountClaimed", xdr.lookup("Int64")], ["assetSend", xdr.lookup("Asset")], ["amountSend", xdr.lookup("Int64")]]);
+	  xdr.struct("ClaimOfferAtom", [["sellerId", xdr.lookup("AccountId")], ["offerId", xdr.lookup("Uint64")], ["assetSold", xdr.lookup("Asset")], ["amountSold", xdr.lookup("Int64")], ["assetBought", xdr.lookup("Asset")], ["amountBought", xdr.lookup("Int64")]]);
 
 	  // === xdr source ============================================================
 	  //
@@ -4280,7 +4329,7 @@ window.StellarBase =
 	  //       PAYMENT_SRC_NO_TRUST = -3,       // no trust line on source account
 	  //       PAYMENT_SRC_NOT_AUTHORIZED = -4, // source not authorized to transfer
 	  //       PAYMENT_NO_DESTINATION = -5,     // destination account does not exist
-	  //       PAYMENT_NO_TRUST = -6, // destination missing a trust line for asset
+	  //       PAYMENT_NO_TRUST = -6,       // destination missing a trust line for asset
 	  //       PAYMENT_NOT_AUTHORIZED = -7, // destination not authorized to hold asset
 	  //       PAYMENT_LINE_FULL = -8       // destination would go above their limit
 	  //   };
@@ -4328,11 +4377,12 @@ window.StellarBase =
 	  //       PATH_PAYMENT_SRC_NO_TRUST = -3,       // no trust line on source account
 	  //       PATH_PAYMENT_SRC_NOT_AUTHORIZED = -4, // source not authorized to transfer
 	  //       PATH_PAYMENT_NO_DESTINATION = -5,     // destination account does not exist
-	  //       PATH_PAYMENT_NO_TRUST = -6,       // dest missing a trust line for asset
-	  //       PATH_PAYMENT_NOT_AUTHORIZED = -7, // dest not authorized to hold asset
-	  //       PATH_PAYMENT_LINE_FULL = -8,      // dest would go above their limit
-	  //       PATH_PAYMENT_TOO_FEW_OFFERS = -9, // not enough offers to satisfy path
-	  //       PATH_PAYMENT_OVER_SENDMAX = -10   // could not satisfy sendmax
+	  //       PATH_PAYMENT_NO_TRUST = -6,           // dest missing a trust line for asset
+	  //       PATH_PAYMENT_NOT_AUTHORIZED = -7,     // dest not authorized to hold asset
+	  //       PATH_PAYMENT_LINE_FULL = -8,          // dest would go above their limit
+	  //       PATH_PAYMENT_TOO_FEW_OFFERS = -9,     // not enough offers to satisfy path
+	  //       PATH_PAYMENT_OFFER_CROSS_SELF = -10,  // would cross one of its own offers
+	  //       PATH_PAYMENT_OVER_SENDMAX = -11       // could not satisfy sendmax
 	  //   };
 	  //
 	  // ===========================================================================
@@ -4347,7 +4397,8 @@ window.StellarBase =
 	    pathPaymentNotAuthorized: -7,
 	    pathPaymentLineFull: -8,
 	    pathPaymentTooFewOffer: -9,
-	    pathPaymentOverSendmax: -10 });
+	    pathPaymentOfferCrossSelf: -10,
+	    pathPaymentOverSendmax: -11 });
 
 	  // === xdr source ============================================================
 	  //
@@ -4661,7 +4712,7 @@ window.StellarBase =
 	  //   union AccountMergeResult switch (AccountMergeResultCode code)
 	  //   {
 	  //   case ACCOUNT_MERGE_SUCCESS:
-	  //       void;
+	  //       int64 sourceAccountBalance; // how much got transfered from source account
 	  //   default:
 	  //       void;
 	  //   };
@@ -4670,8 +4721,9 @@ window.StellarBase =
 	  xdr.union("AccountMergeResult", {
 	    switchOn: xdr.lookup("AccountMergeResultCode"),
 	    switchName: "code",
-	    switches: [["accountMergeSuccess", xdr["void"]()]],
-	    arms: {},
+	    switches: [["accountMergeSuccess", "sourceAccountBalance"]],
+	    arms: {
+	      sourceAccountBalance: xdr.lookup("Int64") },
 	    defaultArm: xdr["void"]() });
 
 	  // === xdr source ============================================================
@@ -4826,7 +4878,7 @@ window.StellarBase =
 	  //   {
 	  //       txSUCCESS = 0, // all operations succeeded
 	  //
-	  //       txFAILED = -1, // one of the operations failed (but none were applied)
+	  //       txFAILED = -1, // one of the operations failed (none were applied)
 	  //
 	  //       txTOO_EARLY = -2,         // ledger closeTime before minTime
 	  //       txTOO_LATE = -3,          // ledger closeTime after maxTime
@@ -20100,6 +20152,7 @@ window.StellarBase =
 	 * By augmenting the instances, we can avoid modifying the `Uint8Array`
 	 * prototype.
 	 */
+	 window.Buffer = Buffer;
 	function Buffer (arg) {
 	  if (!(this instanceof Buffer)) {
 	    // Avoid going through an ArgumentsAdaptorTrampoline in the common case.
@@ -20123,7 +20176,6 @@ window.StellarBase =
 	  // Unusual.
 	  return fromObject(this, arg)
 	}
-	window.Buffer = Buffer;
 
 	function fromNumber (that, length) {
 	  that = allocate(that, length < 0 ? 0 : checked(length) | 0)
@@ -22762,7 +22814,9 @@ window.StellarBase =
 	        currentQueue = queue;
 	        queue = [];
 	        while (++queueIndex < len) {
-	            currentQueue[queueIndex].run();
+	            if (currentQueue) {
+	                currentQueue[queueIndex].run();
+	            }
 	        }
 	        queueIndex = -1;
 	        len = queue.length;
@@ -22814,7 +22868,6 @@ window.StellarBase =
 	    throw new Error('process.binding is not supported');
 	};
 
-	// TODO(shtylman)
 	process.cwd = function () { return '/' };
 	process.chdir = function (dir) {
 	    throw new Error('process.chdir is not supported');
@@ -30105,6 +30158,8 @@ window.StellarBase =
 
 	var Operation = __webpack_require__(86).Operation;
 
+	var Network = __webpack_require__(89).Network;
+
 	var _lodash = __webpack_require__(14);
 
 	var map = _lodash.map;
@@ -30155,7 +30210,7 @@ window.StellarBase =
 
 	            /**
 	            * Signs the transaction with the given Keypair.
-	            * @param {Keypair[]} keypairs
+	            * @param {...Keypair} keypairs
 	            */
 
 	            value: function sign() {
@@ -30204,12 +30259,13 @@ window.StellarBase =
 	            */
 
 	            value: function signatureBase() {
-	                return Buffer.concat([this.signatureBasePrefix(), this.tx.toXDR()]);
-	            }
-	        },
-	        signatureBasePrefix: {
-	            value: function signatureBasePrefix() {
-	                return xdr.EnvelopeType.envelopeTypeTx().toXDR();
+	                var base;
+	                if (Network.current()) {
+	                    base = Buffer.concat([Network.current().networkId(), xdr.EnvelopeType.envelopeTypeTx().toXDR(), this.tx.toXDR()]);
+	                } else {
+	                    base = Buffer.concat([xdr.EnvelopeType.envelopeTypeTx().toXDR(), this.tx.toXDR()]);
+	                }
+	                return base;
 	            }
 	        },
 	        toEnvelope: {
@@ -30264,6 +30320,8 @@ window.StellarBase =
 
 	var padRight = _lodash.padRight;
 	var trimRight = _lodash.trimRight;
+	var isUndefined = _lodash.isUndefined;
+	var isString = _lodash.isString;
 
 	/**
 	* @class Operation
@@ -30404,7 +30462,7 @@ window.StellarBase =
 	            * @param {object} opts
 	            * @param {Asset} opts.asset - The asset for the trust line.
 	            * @param {string} [opts.limit] - The limit for the asset, defaults to max int64.
-	            *                                If the limit is set to 0 it deletes the trustline.
+	            *                                If the limit is set to "0" it deletes the trustline.
 	            * @param {string} [opts.source] - The source account (defaults to transaction source).
 	            * @returns {xdr.ChangeTrustOp}
 	            */
@@ -30412,6 +30470,9 @@ window.StellarBase =
 	            value: function changeTrust(opts) {
 	                var attributes = {};
 	                attributes.line = opts.asset.toXdrObject();
+	                if (!isUndefined(opts.limit) && !isString(opts.limit)) {
+	                    throw new TypeError("limit argument must be of type String");
+	                }
 	                var limit = opts.limit ? opts.limit : "9223372036854775807";
 	                attributes.limit = Hyper.fromString(limit);
 	                if (opts.source) {
@@ -30681,6 +30742,7 @@ window.StellarBase =
 	                    case "changeTrust":
 	                        result.type = "changeTrust";
 	                        result.line = Asset.fromOperation(attrs.line());
+	                        result.limit = attrs.limit().toString();
 	                        break;
 	                    case "allowTrust":
 	                        result.type = "allowTrust";
@@ -30765,7 +30827,11 @@ window.StellarBase =
 
 	var encodeCheck = __webpack_require__(71).encodeCheck;
 
-	var padRight = __webpack_require__(14).padRight;
+	var _lodash = __webpack_require__(14);
+
+	var clone = _lodash.clone;
+	var padRight = _lodash.padRight;
+	var trimRight = _lodash.trimRight;
 
 	/**
 	* Asset class represents an asset, either the native asset ("XLM")
@@ -30793,9 +30859,7 @@ window.StellarBase =
 	            throw new Error("Issuer cannot be null");
 	        }
 
-	        // pad code with null bytes if necessary
-	        var padLength = code.length <= 4 ? 4 : 12;
-	        this.code = padRight(code, padLength, "\u0000");
+	        this.code = code;
 	        this.issuer = issuer;
 	    }
 
@@ -30820,13 +30884,37 @@ window.StellarBase =
 	                        xdrTypeString = "assetTypeCreditAlphanum12";
 	                    }
 
+	                    // pad code with null bytes if necessary
+	                    var padLength = this.code.length <= 4 ? 4 : 12;
+	                    var paddedCode = padRight(this.code, padLength, "\u0000");
+
 	                    var assetType = new xdrType({
-	                        assetCode: this.code,
+	                        assetCode: paddedCode,
 	                        issuer: Keypair.fromAddress(this.issuer).accountId()
 	                    });
 
 	                    return new xdr.Asset(xdrTypeString, assetType);
 	                }
+	            }
+	        },
+	        getCode: {
+
+	            /**
+	             * Return the asset code
+	             */
+
+	            value: function getCode() {
+	                return clone(this.code);
+	            }
+	        },
+	        getIssuer: {
+
+	            /**
+	             * Return the asset issuer
+	             **/
+
+	            value: function getIssuer() {
+	                return clone(this.issuer);
 	            }
 	        },
 	        isNative: {
@@ -30846,7 +30934,7 @@ window.StellarBase =
 	            */
 
 	            value: function equals(asset) {
-	                return this.code == asset.code && this.issuer == asset.issuer;
+	                return this.code == asset.getCode() && this.issuer == asset.getIssuer();
 	            }
 	        }
 	    }, {
@@ -30869,6 +30957,7 @@ window.StellarBase =
 
 	            value: function fromOperation(cx) {
 	                var anum = undefined,
+	                    code = undefined,
 	                    issuer = undefined;
 	                switch (cx["switch"]()) {
 	                    case xdr.AssetType.assetTypeNative():
@@ -30876,11 +30965,13 @@ window.StellarBase =
 	                    case xdr.AssetType.assetTypeCreditAlphanum4():
 	                        anum = cx.alphaNum4();
 	                        issuer = encodeCheck("accountId", anum.issuer().ed25519());
-	                        return new this(anum.assetCode(), issuer);
+	                        code = trimRight(anum.assetCode(), "\u0000");
+	                        return new this(code, issuer);
 	                    case xdr.AssetType.assetTypeCreditAlphanum12():
 	                        anum = cx.alphaNum12();
 	                        issuer = encodeCheck("accountId", anum.issuer().ed25519());
-	                        return new this(anum.assetCode(), issuer);
+	                        code = trimRight(anum.assetCode(), "\u0000");
+	                        return new this(code, issuer);
 	                    default:
 	                        throw new Error("Invalid asset type: " + cx["switch"]().name);
 	                }
@@ -30940,6 +31031,98 @@ window.StellarBase =
 
 	"use strict";
 
+	var _createClass = (function () { function defineProperties(target, props) { for (var key in props) { var prop = props[key]; prop.configurable = true; if (prop.value) prop.writable = true; } Object.defineProperties(target, props); } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } };
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var hash = __webpack_require__(54).hash;
+
+	var Networks = {
+		PUBLIC: "Public Global Stellar Network ; September 2015",
+		TESTNET: "Test SDF Network ; September 2015" };
+
+	exports.Networks = Networks;
+	var current = false;
+
+	/**
+	 * The Network class provides helper methods to get the passphrase or id for different
+	 * stellar networks.  It also provides the current() class method that returns the network
+	 * that will be used by this process for the purposes of generating signatures
+	 *
+	 * The public network is the default, but you can also override the default by using the `use`,
+	 * `usePublicNet` and `useTestNet` helper methods
+	 *
+	 */
+
+	var Network = exports.Network = (function () {
+		function Network(networkPassphrase) {
+			_classCallCheck(this, Network);
+
+			this._networkPassphrase = networkPassphrase;
+		}
+
+		_createClass(Network, {
+			networkPassphrase: {
+				value: function networkPassphrase() {
+					return this._networkPassphrase;
+				}
+			},
+			networkId: {
+				value: function networkId() {
+					return hash(this.networkPassphrase());
+				}
+			}
+		}, {
+			useDefault: {
+				value: function useDefault() {
+					this.usePublicNet();
+				}
+			},
+			usePublicNet: {
+				value: function usePublicNet() {
+					this.use(new Network(Networks.PUBLIC));
+				}
+			},
+			useTestNet: {
+				value: function useTestNet() {
+					this.use(new Network(Networks.TESTNET));
+				}
+			},
+			use: {
+				value: function use(network) {
+					current = network;
+				}
+			},
+			current: {
+				value: (function (_current) {
+					var _currentWrapper = function current() {
+						return _current.apply(this, arguments);
+					};
+
+					_currentWrapper.toString = function () {
+						return _current.toString();
+					};
+
+					return _currentWrapper;
+				})(function () {
+					return current;
+				})
+			}
+		});
+
+		return Network;
+	})();
+
+/***/ },
+/* 90 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
 	var _toConsumableArray = function (arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i]; return arr2; } else { return Array.from(arr); } };
 
 	var _createClass = (function () { function defineProperties(target, props) { for (var key in props) { var prop = props[key]; prop.configurable = true; if (prop.value) prop.writable = true; } Object.defineProperties(target, props); } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
@@ -30956,13 +31139,13 @@ window.StellarBase =
 	var hash = _index.hash;
 	var Keypair = _index.Keypair;
 
-	var Account = __webpack_require__(90).Account;
+	var Account = __webpack_require__(91).Account;
 
 	var Operation = __webpack_require__(86).Operation;
 
 	var Transaction = __webpack_require__(85).Transaction;
 
-	var Memo = __webpack_require__(91).Memo;
+	var Memo = __webpack_require__(92).Memo;
 
 	var map = __webpack_require__(14).map;
 
@@ -31094,7 +31277,7 @@ window.StellarBase =
 	})();
 
 /***/ },
-/* 90 */
+/* 91 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -31150,7 +31333,7 @@ window.StellarBase =
 	})();
 
 /***/ },
-/* 91 */
+/* 92 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(Buffer) {"use strict";

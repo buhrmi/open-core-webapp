@@ -14,7 +14,7 @@ liveDb
 
 # Catch up on the recent 100 changes and set up sync
 liveDb
-  .select "SELECT * FROM trustlines ORDER BY lastmodified DESC limit 100",
+  .select "SELECT * FROM trustlines ORDER BY lastmodified DESC limit 1000",
     trustlines: Meteor.bindEnvironment (row, op) ->
       row.accountid = String(row.accountid)
       if op == 'INSERT' or op == 'UPDATE1'
@@ -31,7 +31,7 @@ liveDb
 
 # Catch up on the recent 100 changes and set up sync
 liveDb
-  .select "SELECT * FROM offers ORDER BY lastmodified DESC limit 100",
+  .select "SELECT * FROM offers ORDER BY lastmodified DESC limit 1000",
     offers: Meteor.bindEnvironment (row, op) ->
       row.offerid = String(row.offerid)
       if op == 'INSERT' or op == 'UPDATE1'
@@ -46,7 +46,7 @@ liveDb
 
 # Catch up on the recent 100 changes and set up sync
 liveDb
-  .select "SELECT * FROM txhistory ORDER BY ledgerseq DESC limit 100",
+  .select "SELECT * FROM txhistory ORDER BY ledgerseq DESC limit 1000",
     txhistory: Meteor.bindEnvironment (row, op) ->
       row.txid = String(row.txid)
       if op == 'INSERT' or op == 'UPDATE1'
