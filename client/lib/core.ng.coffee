@@ -21,6 +21,13 @@ angular.module 'core', ['angularModalService']
           issuer: trustline.issuer
           assetcode: trustline.assetcode
 
+  $rootScope.initiateManageOffer = (offer) ->
+    ModalService.showModal
+      templateUrl: 'templates/core/modal.offer.html'
+      controller: 'ModalOfferController'
+      inputs:
+        offer: Offers.findOne(offer._id)
+
   $rootScope.initiateNewOffer = ->
     ModalService.showModal
       templateUrl: 'templates/core/modal.new_offer.html'
@@ -41,7 +48,6 @@ angular.module 'core', ['angularModalService']
   $scope.selling_trustlines = available_selling_trustlines
   $scope.buying_trustlines = Trustlines.find(accountid: $scope.currentAccount._id).fetch()
   $scope.create = ->
-    
     want = new StellarBase.Asset($scope.buying_trustline.assetcode, $scope.buying_trustline.issuer)
     have = new StellarBase.Asset($scope.selling_trustline.assetcode, $scope.selling_trustline.issuer)
     tb = $scope.currentAccount.transactionBuilder()
@@ -74,6 +80,13 @@ angular.module 'core', ['angularModalService']
     txParams.type = 'payment'
     txParams.amount = $scope.amount * 10000000
     $scope.currentAccount.performTransaction(txParams)
+
+.controller 'ModalOfferController', ($scope, offer, close) ->
+  $scope.close = close
+  $scope.$meteorAutorun ->
+    $scope.offer = Offers.findOne(offer)
+  $scope.newAmount = offer.amount / 10000000
+  $scope.newPrice = offer.price / 10000000
 
 .controller 'ModalTrustlineController', ($scope, trustline, close) ->
   $scope.close = close

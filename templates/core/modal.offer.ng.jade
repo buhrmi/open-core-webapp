@@ -1,0 +1,21 @@
+.modalwrapper
+  .modalbox.modal_trustline.transaction_source
+    .loading_overlay
+      .message
+        .spinner
+          .double-bounce1
+          .double-bounce2
+        span Waiting...
+    .title Edit Offer
+    .body
+      p 
+        | Amount:
+        input(ng-model="newAmount" placeholder="Amount")
+      p 
+        | Price: 
+        input(ng-model="newPrice" placeholder="Price")
+      
+    .actions
+      a(ng-click="close()") Cancel
+      span &nbsp;or&nbsp;
+      button.tx(ng-click="offer.manage({price: newPrice * 10000000, amount: newAmount * 10000000})") Change Offer
