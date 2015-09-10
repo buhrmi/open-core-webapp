@@ -26,6 +26,11 @@ angular.module 'core', ['angularModalService']
       templateUrl: 'templates/core/modal.new_offer.html'
       controller: 'ModalNewOfferController'
 
+  $rootScope.initiateNewTrustline = ->
+    ModalService.showModal
+      templateUrl: 'templates/core/modal.new_trustline.html'
+      controller: 'ModalNewTrustlineController'
+
 .controller 'ModalNewOfferController', ($scope, close) ->
   $scope.close = close
   # $scope.$meteorAutorun ->
@@ -49,6 +54,14 @@ angular.module 'core', ['angularModalService']
     tx = tb.addOperation(op).build()
     $scope.currentAccount.submitTransaction(tx)
 
+.controller 'ModalNewTrustlineController', ($scope, close) ->
+  $scope.close = close
+  # $scope.$meteorAutorun ->
+  $scope.create = ->
+    trustline = Trustlines._transform($scope.newTrustline)
+    trustline.tlimit = trustline.tlimit * 10000000
+    trustline.accountid = $scope.currentAccount._id
+    trustline.manage()
 
 
 .controller 'ModalPaymentController', ($scope, trustline, close) ->

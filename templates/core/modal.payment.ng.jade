@@ -12,7 +12,7 @@
       core-trustline(issuer="trustline.issuer" assetcode="trustline.assetcode")
       div
         input(ng-model="amount" placeholder="amount")
-        | (max: {{trustline.tlimit - trustline.balance}})
+        | (max: {{(trustline.tlimit - trustline.balance) / 10000000}})
     .actions
       a(ng-click="close()") Cancel
       span &nbsp;or&nbsp;

@@ -16,7 +16,7 @@ if Meteor.isServer
   #   Trustlines.find()
 
 Trustlines.helpers
-  manage: (opts)->
+  manage: (opts = {})->
     asset = new StellarBase.Asset(@assetcode, @issuer)
     account = Accounts.findOne(@accountid)
     txBuilder = account.transactionBuilder()

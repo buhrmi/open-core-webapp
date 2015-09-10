@@ -1,0 +1,17 @@
+.modalwrapper
+  .modalbox.modal_new_trustline.transaction_source
+    .loading_overlay
+      .message
+        .spinner
+          .double-bounce1
+          .double-bounce2
+        span Waiting...
+    .title New Trustline
+    .body
+      input(ng-model="newTrustline.issuer" placeholder="Address")
+      input(ng-model="newTrustline.assetcode" placeholder="Asset Code")
+      input(ng-model="newTrustline.tlimit" placeholder="Limit")
+    .actions
+      a(ng-click="close()") Cancel
+      span &nbsp;or&nbsp;
+      button.tx(ng-click="create()") Create Trust
