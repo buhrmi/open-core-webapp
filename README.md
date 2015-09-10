@@ -2,7 +2,10 @@
 A web application to interact with the [Core](http://github.com/buhrmi/core)/[Stellar](http://www.stellar.org/galaxy) Consensus Network.
 
 # See it running
-http://open-core.org
+
+* Against the [Open Core](http://github.com/open-core/network) Network: http://open-core.org
+* Against the [Stellar Test](http://www.stellar.org/galaxy) Network: http://test.stellar-core.org
+* Against the Stellar Live Network: (coming soon™)
 
 # Run it locally
 
@@ -16,7 +19,7 @@ http://open-core.org
 
     git clone https://github.com/buhrmi/open-core.git
     cd open-core
-    CORE_DB_URL=postgres://[username]:[password]@[address-of-core-db]/[databasename] meteor
+    CORE_DB_URL=postgres://[username]:[password]@[address-of-core-db]/[databasename] TX_EDNPOINT=http://ip-of-core-node:11626/tx?blob= meteor
 
 # Deploy
 
