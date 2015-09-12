@@ -9,4 +9,5 @@ Meteor.publish 'config', ->
 Configs.upsert({_id: 'global'}, {$set: {
   passphrase: process.env.PASSPHRASE,
   tx_endpoint: process.env.TX_ENDPOINT
+  app_name: process.env.APP_NAME
 }})

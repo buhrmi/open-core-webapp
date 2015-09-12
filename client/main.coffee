@@ -1,4 +1,3 @@
-Meteor.subscribe 'config'
 Tracker.autorun ->
   config = Configs.findOne('global')
   return unless config

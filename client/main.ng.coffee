@@ -5,7 +5,8 @@ defaultSubscriptions = [
   'myTrustlines',
   'receivedTrustlines',
   'myOffers',
-  'myTransactions'
+  'myTransactions',
+  'config'
 ]
 subscriptionPromises = {}
 defaultResolves = {}
@@ -18,7 +19,9 @@ _.each defaultSubscriptions, (subName) ->
 
 angular.module 'opencore', ['angular-meteor', 'ngRoute', 'ngCookies', 'core']
 .run ($meteor, $rootScope, ModalService) ->
-  $rootScope.appName = 'OpenCore'
+  $rootScope.$meteorAutorn ->
+    $rootScope.appName = document.title = Configs.findOne('global')?.app_name
+
   $rootScope.$meteorAutorun ->
     headers = CoreData.ledgerheaders.reactive()
     $rootScope.ledgerSeq = headers[0]?.ledgerseq
