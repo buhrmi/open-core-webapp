@@ -20,7 +20,7 @@ _.each defaultSubscriptions, (subName) ->
 angular.module 'opencore', ['angular-meteor', 'ngRoute', 'ngCookies', 'core']
 .run ($meteor, $rootScope, ModalService) ->
   $rootScope.$meteorAutorun ->
-    $rootScope.appName = document.title = Configs.get('global')?.app_name
+    $rootScope.appName = document.title = Configs.findOne('global')?.app_name
 
   $rootScope.$meteorAutorun ->
     headers = CoreData.ledgerheaders.reactive()
