@@ -91,7 +91,7 @@ angular.module 'core', ['angularModalService']
 .controller 'ModalTrustlineController', ($scope, trustline, close) ->
   $scope.close = close
   $scope.$meteorAutorun ->
-    $scope.trustline = Trustlines.findOne(trustline)
+    $scope.trustline = Trustlines.findOne(trustline) || Trustlines._transform(trustline)
   $scope.newLimit = $scope.trustline.tlimit / 10000000
 
 .factory 'coreAddressService', ($q, $meteor) ->

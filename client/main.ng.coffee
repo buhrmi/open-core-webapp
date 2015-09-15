@@ -86,11 +86,11 @@ angular.module 'opencore', ['angular-meteor', 'ngRoute', 'ngCookies', 'core']
   $scope.userAccounts = $scope.$meteorCollection -> Meteor.user().getAccounts()
 
   $scope.saveAccount = (account) ->
-    Meteor.call 'createAccount', account, ->
-      window.location.pathname = '/mycore'
+    Meteor.call 'createAccount', account
   $scope.useAccount = (account) ->
     $scope.$root.currentAccount = $scope.$root.$meteorObject(Accounts, account._id, false)
     localStorage.setItem('currentAccountId', account._id)
+    window.location.pathname = '/mycore'
   $scope.generateRandom = ->
     kp = StellarBase.Keypair.random()
     $scope.newAccount._id = kp.address()

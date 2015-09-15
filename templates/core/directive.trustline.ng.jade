@@ -12,7 +12,7 @@
     .limit(ng-if="trustline.tlimit") Limit: {{trustline.tlimit / 10000000}}
     .limit(ng-if="trustline.tlimit == 0") Untrusted
     .actions
-      button.tx(ng-if="trustline.tlimit" ng-click="trustline.manage({limit: trustline.balance})") Cancel Trust
+      button.tx(ng-if="trustline.tlimit" ng-click="trustline.manage({limit: trustline.balance || 0})") Cancel Trust
       button.options(ng-if="trustline.tlimit" ng-click="initiateChangeTrust(trustline)")
       button.tx(ng-if="trustline.tlimit == 0" ng-click="initiateChangeTrust(trustline)") Create Trust...
   div(ng-if="currentAccount._id && currentAccount._id == trustline.issuer")
