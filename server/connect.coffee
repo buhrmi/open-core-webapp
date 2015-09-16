@@ -1,7 +1,7 @@
 CORE_DB_URL = process.env['CORE_DB_URL'] || Meteor.settings.core_db_url
 throw 'Please specify Postgres connection string in CORE_DB_URL environment variable' unless CORE_DB_URL
 
-liveDb = new LivePg(CORE_DB_URL, 'opencore');
+@liveDb = new LivePg(CORE_DB_URL, 'opencore');
 
 # Catch up on the recent 10 changes and set up sync
 liveDb
