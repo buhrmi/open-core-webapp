@@ -4,8 +4,7 @@ A web application to interact with the [Core](http://github.com/buhrmi/core)/[St
 # See it running
 
 * Against the [Open Core](http://github.com/open-core/network) Network: http://open-core.org
-* Against the [Stellar Test](http://www.stellar.org/galaxy) Network: http://test.stellar-core.org
-* Against the Stellar Live Network: (coming soon™)
+* Against the [Stellar](http://www.stellar.org/galaxy) Network: http://stellar-core.org
 
 # Run it locally
 
