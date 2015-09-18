@@ -75,7 +75,7 @@ Accounts.helpers
     # console.log(stTransaction)
     stTransaction.sign(keypair)
     blob = stTransaction.toEnvelope().toXDR().toString('base64')
-    $.getJSON TX_ENDPOINT+encodeURIComponent(blob), (data) ->
+    Meteor.call 'submitTransaction', blob, (error, data) ->
       CoreUI.transactionResponse(data, stTransaction)
     CoreUI.transactionSent(stTransaction)
 

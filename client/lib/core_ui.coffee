@@ -9,7 +9,7 @@
 
   # Transaction response from the server. Before accepting to the network
   transactionResponse: (response, tx) ->
-    if response.status != 'PENDING'
+    if !response || response.status != 'PENDING'
       @transactionFailed(JSON.stringify(tx.operations)+tx.source)
 
 

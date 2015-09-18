@@ -1,4 +1,10 @@
 Meteor.methods
+  'submitTransaction': (blob) ->
+    console.log('derp')
+    result = HTTP.get(process.env.TX_ENDPOINT+encodeURIComponent(blob))
+    console.log(result)
+    result.data
+
   'createAccount': (newAccount) ->
     return false unless @userId && newAccount.user_id == @userId # TODO: or userId is admin
     return false unless Accounts._transform(newAccount).isValid()

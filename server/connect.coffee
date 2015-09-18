@@ -67,7 +67,7 @@ Meteor.publish 'lastTransactions', ->
   liveDb.select('SELECT * FROM txhistory ORDER BY ledgerseq DESC limit 10')
 
 Meteor.publish 'peers', ->
-  liveDb.select('SELECT * FROM peers ORDER BY rank DESC')
+  liveDb.select('SELECT * FROM peers DESC')
 
 Meteor.publish 'featuredAssets', ->
   liveDb.select('select distinct ON(issuer,assetcode) issuer,assetcode,balance  from trustlines order by issuer,assetcode,balance limit 10')

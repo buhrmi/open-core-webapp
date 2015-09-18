@@ -1,3 +1,4 @@
+StellarBase.Network.usePublicNetwork()
 # TODO: extract subscription building process into angular provider or something...
 # TODO: update subscriptions when adding or removing account
 defaultSubscriptions = [
