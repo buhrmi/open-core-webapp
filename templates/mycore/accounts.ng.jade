@@ -2,7 +2,7 @@
   .account(ng-repeat="account in userAccounts")
     .address Address: {{account.name}} / {{account._id}}
     .sequence Sequence: {{account.pg.seqnum}}
-    a(ng-click="useAccount(account)" ng-href="/mycore") Use this Account
+    a(ng-click="useAccount(account)") Use this Account
 
 h4 Add Account
 

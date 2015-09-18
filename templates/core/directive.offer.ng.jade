@@ -13,7 +13,7 @@
     span Buying
     span.code {{offer.buyingassetcode}}
     a.buyingissuer(core-address="offer.buyingissuer")
-  .price Price: {{offer.price / 10000000}}
+  .price Price: {{offer.price}}
   div(ng-if="currentAccount._id == offer.sellerid")
     .actions
       button.tx(ng-click="offer.manage({amount: '0'})") Cancel Offer

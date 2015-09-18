@@ -56,7 +56,7 @@ angular.module 'core', ['angularModalService']
       selling: have
       buying: want
       amount: $scope.amount * 10000000
-      price: $scope.price * 10000000
+      price: $scope.price
     tx = tb.addOperation(op).build()
     $scope.currentAccount.submitTransaction(tx)
 
@@ -86,7 +86,7 @@ angular.module 'core', ['angularModalService']
   $scope.$meteorAutorun ->
     $scope.offer = Offers.findOne(offer)
   $scope.newAmount = offer.amount / 10000000
-  $scope.newPrice = offer.price / 10000000
+  $scope.newPrice = offer.price
 
 .controller 'ModalTrustlineController', ($scope, trustline, close) ->
   $scope.close = close

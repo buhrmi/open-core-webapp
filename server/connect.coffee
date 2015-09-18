@@ -5,12 +5,16 @@ throw 'Please specify Postgres connection string in CORE_DB_URL environment vari
 
 # Catch up on the recent 10 changes and set up sync
 liveDb
-  .select("SELECT * FROM accounts ORDER BY lastmodified DESC limit 10")
+  .select "SELECT * FROM accounts ORDER BY lastmodified DESC limit 1000",
+    accounts: Meteor.bindEnvironment (row, op) ->
+      if op == 'INSERT' or op == 'UPDATE1'
+        Accounts.handlePgUpdate(row, true)
+      if op == 'DELETE'
+        Accounts.remove({_id:row.accountid})
+      return false
   .on 'update', Meteor.bindEnvironment (diff, data) ->
     for row in data
-      upd = {pg: row}
-      upd.name = row.homedomain if row.homedomain
-      Accounts.upsert({_id: row.accountid}, {$set: upd})
+      Accounts.handlePgUpdate(row)
 
 # Catch up on the recent 100 changes and set up sync
 liveDb
