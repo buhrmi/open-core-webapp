@@ -18,15 +18,17 @@ Accounts.allow
     return false if fields.indexOf('verified') != -1
     true
 
+Accounts.handlePgUpdate = (row, attemptToVerify = false) ->
+  upd = {pg: row}
+  if row.homedomain
+    upd.name = row.homedomain
+    # if attemptToVerify
+    #   res = HTTP.get(pg.homedomain+'/accounts.txt')
+    #   upd.verified = res.content.indexOf(row.accountid) != -1
+  Accounts.upsert({_id: row.accountid}, {$set: upd})
+
 Accounts.helpers
-  handlePgUpdate: (row, attemptToVerify = false) ->
-    upd = {pg: row}
-    if row.homedomain
-      upd.name = row.homedomain
-      # if attemptToVerify
-      #   res = HTTP.get(pg.homedomain+'/accounts.txt')
-      #   upd.verified = res.content.indexOf(row.accountid) != -1
-    Accounts.upsert({_id: row.accountid}, {$set: upd})
+  
 
   isValid: ->
     try
