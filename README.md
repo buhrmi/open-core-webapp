@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/open-core/webapp.svg?branch=master)](https://travis-ci.org/open-core/webapp)
+
 # open-core/webapp
 A web application to interact with the [Core](http://github.com/buhrmi/core)/[Stellar](http://www.stellar.org/galaxy) Consensus Network.
 
