@@ -15,7 +15,8 @@ Accounts.allow
   update: (userId, account, fields) ->
     return false unless userId && account.user_id == userId # TODO: or userId is admin
     return false unless Accounts._transform(account).isValid()
-    return false if fields.indexOf('verified') != -1
+    return false if 'verified' in fields
+    return false if 'user_id' in fields
     true
 
 Accounts.handlePgUpdate = (row, attemptToVerify = false) ->
