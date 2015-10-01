@@ -50,7 +50,7 @@ liveDb
 
 # Catch up on the recent 100 changes and set up sync
 liveDb
-  .select "SELECT * FROM txhistory ORDER BY ledgerseq DESC limit 1000",
+  .select "SELECT txhistory.*, ledgerheaders.closetime FROM txhistory LEFT JOIN ledgerheaders ON txhistory.ledgerseq=ledgerheaders.ledgerseq ORDER BY ledgerseq DESC limit 1000",
     txhistory: Meteor.bindEnvironment (row, op) ->
       row.txid = String(row.txid)
       if op == 'INSERT' or op == 'UPDATE1'

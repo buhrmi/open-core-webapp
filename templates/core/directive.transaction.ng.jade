@@ -1,3 +1,4 @@
 .transaction(ng-class="{success: transaction.success}")
+  p {{transaction.closetime * 1000 | date : 'medium'}} (\#{{transaction.ledgerseq}})
   a(core-address="transaction.body.source")
   p(ng-repeat="operation in transaction.body.operations") {{operation}}
