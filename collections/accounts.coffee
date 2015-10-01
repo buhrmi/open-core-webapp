@@ -89,8 +89,8 @@ Accounts.helpers
     stTransaction.sign(keypair)
     blob = stTransaction.toEnvelope().toXDR().toString('base64')
     Meteor.call 'submitTransaction', blob, (error, data) ->
-      CoreUI.transactionResponse(data, stTransaction)
-    CoreUI.transactionSent(stTransaction)
+      CoreUI.transactionResponse(data, stTransaction) if Meteor.isClient
+    CoreUI.transactionSent(stTransaction) if Meteor.isClient
 
   transactionBuilder: ->
     stAccount = new StellarBase.Account(@_id, @pg?.seqnum || 0)

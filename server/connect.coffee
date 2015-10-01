@@ -67,11 +67,8 @@ liveDb
 Meteor.publish 'lastLedgerHeaders', ->
   liveDb.select('SELECT * FROM ledgerheaders ORDER BY closetime DESC limit 10')
 
-Meteor.publish 'lastTransactions', ->
-  liveDb.select('SELECT * FROM txhistory ORDER BY ledgerseq DESC limit 10')
-
 Meteor.publish 'peers', ->
-  liveDb.select('SELECT * FROM peers DESC')
+  liveDb.select('SELECT * FROM peers')
 
 Meteor.publish 'featuredAssets', ->
   liveDb.select('select distinct ON(issuer,assetcode) issuer,assetcode,balance  from trustlines order by issuer,assetcode,balance limit 10')

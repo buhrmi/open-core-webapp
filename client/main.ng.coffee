@@ -7,6 +7,7 @@ defaultSubscriptions = [
   'receivedTrustlines',
   'myOffers',
   'myTransactions',
+  'lastTransactions',
   'config'
 ]
 subscriptionPromises = {}
@@ -148,17 +149,8 @@ angular.module 'opencore', ['angular-meteor', 'ngRoute', 'ngCookies', 'core']
   $scope.resourceTitle = 'Overview'
   $scope.resourceTemplate = 'templates/overview.html'
 
-  $scope.$meteorAutorun ->
-    pgTransactions = CoreData.transactions.reactive()
-    $scope.transactions = for pgTransaction in pgTransactions
-      {
-        body: new StellarBase.Transaction(pgTransaction.txbody)
-        pg: pgTransaction
-        result: StellarBase.xdr.TransactionResultPair.fromXDR(new Buffer(pgTransaction.txresult, 'base64'))
-      }
-
-  $scope.$meteorAutorun ->
-    $scope.ledgerheaders = CoreData.ledgerheaders.reactive()
+  $scope.lastTransactions = $scope.$meteorCollection ->
+    Transactions.find {}, {sort: {ledgerseq: -1}}
 
   $scope.$meteorAutorun ->
     $scope.featuredAssets = CoreData.featuredAssets.reactive()

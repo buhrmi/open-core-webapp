@@ -118,6 +118,10 @@ angular.module 'core', ['angularModalService']
         el.attr 'title', address
         el.html account?.name || (address.slice(0,7)+'...')
 
+.directive 'coreTransaction', ->
+  templateUrl: 'templates/core/directive.transaction.html'
+  scope: true
+
 .directive 'coreTrustlinePicker', ->
   templateUrl: 'templates/core/directive.trustline_picker.html'
   restrict: 'E'

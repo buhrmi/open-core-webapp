@@ -32,13 +32,10 @@
 
 $(document).on 'click', (e) ->
   CoreUI.transactionSourceElement = $(e.target).parents('.transaction_source')
-
-Tracker.autorun ->
-  lastPgTransaction = CoreData.transactions.reactive()[0]
-  return unless lastPgTransaction
-  result = StellarBase.xdr.TransactionResultPair.fromXDR(new Buffer(lastPgTransaction.txresult, 'base64'))
+Meteor.startup -> Tracker.autorun -> Transactions.find().map (transaction) ->
+  result = StellarBase.xdr.TransactionResultPair.fromXDR(new Buffer(transaction.txresult, 'base64'))
   success = result.result().result().switch().name == 'txSuccess'
-  transaction = new StellarBase.Transaction(lastPgTransaction.txbody)
+  transaction = new StellarBase.Transaction(transaction.txbody)
   identifier = JSON.stringify(transaction.operations)+transaction.source
   if success
     CoreUI.transactionSuccess(identifier)

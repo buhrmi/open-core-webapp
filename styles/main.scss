@@ -98,6 +98,16 @@
   }
   padding: 4px 8px;
 }
+.transaction {
+  display: inline-block;
+  border: 1px solid lighten($brandColor, 20);
+  border-radius: 5px;
+  padding: 6px 14px;
+  background-color: #FFCCCC;
+  &.success {
+    background-color: #CCFFCC;
+  }
+}
 .trustline {
   display: inline-block;
   border: 1px solid lighten($brandColor, 20);

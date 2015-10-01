@@ -1,8 +1,6 @@
 Meteor.methods
   'submitTransaction': (blob) ->
-    console.log('derp')
     result = HTTP.get(process.env.TX_ENDPOINT+encodeURIComponent(blob))
-    console.log(result)
     result.data
 
   'createAccount': (newAccount) ->

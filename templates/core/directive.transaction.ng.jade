@@ -1,0 +1,3 @@
+.transaction(ng-class="{success: transaction.success}")
+  a(core-address="transaction.body.source")
+  p(ng-repeat="operation in transaction.body.operations") {{operation}}
