@@ -55,7 +55,7 @@ angular.module 'core', ['angularModalService']
     op = StellarBase.Operation.manageOffer
       selling: have
       buying: want
-      amount: $scope.amount * 10000000
+      amount: $scope.amount
       price: $scope.price
     tx = tb.addOperation(op).build()
     $scope.currentAccount.submitTransaction(tx)
@@ -65,7 +65,7 @@ angular.module 'core', ['angularModalService']
   # $scope.$meteorAutorun ->
   $scope.create = ->
     trustline = Trustlines._transform($scope.newTrustline)
-    trustline.tlimit = trustline.tlimit * 10000000
+    trustline.tlimit = trustline.tlimit
     trustline.accountid = $scope.currentAccount._id
     trustline.manage()
 
@@ -78,7 +78,7 @@ angular.module 'core', ['angularModalService']
   $scope.send = ->
     txParams = $scope.trustline
     txParams.type = 'payment'
-    txParams.amount = $scope.amount * 10000000
+    txParams.amount = $scope.amount
     $scope.currentAccount.performTransaction(txParams)
 
 .controller 'ModalOfferController', ($scope, offer, close) ->

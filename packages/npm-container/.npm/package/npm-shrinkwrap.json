@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "stellar-base": {
-      "version": "0.4.6",
+      "version": "0.4.8",
       "dependencies": {
         "babel-runtime": {
           "version": "5.8.24",
