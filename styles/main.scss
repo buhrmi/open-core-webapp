@@ -143,7 +143,8 @@
   left: 0;
   height: 100%;
   width: 100%;
-  background-color: rgba(lighten($brandColor, 40), 0.9);
+  background-color: rgba(lighten($brandColor, 40), 0.8);
+  z-index: 1;
   .message {
     position: absolute;
     top: 50%;
