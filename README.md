@@ -1,3 +1,5 @@
+# NOTE: This experiment is not in active development anymore. I've concluded it was a success and will investigate a re-implementation  including the [network core](http://github.com/buhrmi/open-core-network) if I can scrap together some funds.
+
 [![Build Status](https://travis-ci.org/open-core/webapp.svg?branch=master)](https://travis-ci.org/open-core/webapp)
 # open-core/webapp
 A web application to interact with the [Core](http://github.com/buhrmi/core)/[Stellar](http://www.stellar.org/galaxy) Consensus Network.
