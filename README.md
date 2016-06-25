@@ -1,4 +1,4 @@
-# NOTE: This experiment is not in active development anymore and the servers have been taken down (for now). Currently investigating a re-implementation  including the [network core](http://github.com/buhrmi/open-core-network) if I can scrap together some funds.
+#### Note, this project is not in active development anymore and the servers have been taken down. If I can scrap together some funds, I'd probably pick it up again including the [network core](http://github.com/buhrmi/open-core-network).
 
 [![Build Status](https://travis-ci.org/open-core/webapp.svg?branch=master)](https://travis-ci.org/open-core/webapp)
 # open-core/webapp
