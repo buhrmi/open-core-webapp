@@ -1,5 +1,3 @@
-#### Note, this project is not in active development anymore and the servers have been taken down. If I can scrap together some funds, I'd probably pick it up again including the [network core](http://github.com/buhrmi/open-core-network).
-
 [![Build Status](https://travis-ci.org/open-core/webapp.svg?branch=master)](https://travis-ci.org/open-core/webapp)
 # open-core/webapp
 A web application to interact with the [Core](http://github.com/buhrmi/core)/[Stellar](http://www.stellar.org/galaxy) Consensus Network.
